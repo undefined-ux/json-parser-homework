@@ -46,7 +46,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
     args.input = stdin;
     args.output = stdout;
     args.compress = 0;
-    args.format = 0;
+    args.format = 1;
 
     // 标记是否已经出现了--format或--compress
     int formatSeen = 0;
@@ -90,6 +90,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
                 exit(EXIT_FAILURE);
             }
             args.compress = 1;
+            args.format = 0;
             compressSeen = 1;
         }
         else if (strcmp(argv[i], "--format") == 0 || strcmp(argv[i], "-f") == 0) {

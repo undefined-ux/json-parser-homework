@@ -35,7 +35,7 @@ struct JsonVal* parseValue() {
 	else if (c == '"' || c == '\'') return parseString();
 	else {
 		fprintf(
-			f,
+			stderr,
 			"Unexcepted token %c at %ld",
 			c, ftell(f)
 		); exit(1);
@@ -164,7 +164,7 @@ struct JsonVal* parseBool() {
 	else {
 		fprintf(
 			stderr,
-			"Excepted token %c at %ld",
+			"Unexcepted token %c at %ld",
 			c, ftell(f)
 		); // 写入报错到标准错误流
 		exit(1);
@@ -188,11 +188,11 @@ struct JsonVal* parseObject() {
 		else if (c == '"' || c == '\'') keyVal = parseString()->val;
 		else if (keyVal != NULL && c == ':') JsonObjInsert(obj, keyVal, parseValue());
 		else {
-			fprintf(f, "Unexcepted token %c at %ld", c, ftell(f));
+			fprintf(stderr, "Unexcepted token %c at %ld", c, ftell(f));
 		}
 	}
-	if (obj->size == 0) {
-		fprintf(f, "Unexcepted token EOF at %ld", ftell(f));
+	if (c != '}') {
+		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f));
 	}
 	res->obj = obj;
 	return res;
@@ -205,8 +205,13 @@ struct JsonVal* parseArray() {
 	res->type = ARRAY; arr->length = 0; 
 	char c;
 	while ((c = fgetc(f)) != EOF && c != ']') {
-
+		ignoreWhiteCharactor(); JsonArrayPushBack(arr, parseValue());
 	}
+	if (c != ']') {
+		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f));
+	}
+	res->arr = arr;
+	return res;
 }
 
 struct JsonVal* parseNull() {
