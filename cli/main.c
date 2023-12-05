@@ -21,8 +21,9 @@ int main(int argc, char* argv[]) {
 	setlocale(LC_ALL, ""); // 设置本地化环境以支持宽字符
     struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
 	// Initalize A Json Object
-	setOutputStream(args.input);
-	setInputStream(args.output);
+	setOutputStream(args.output);
+	setInputStream(args.input);
+
     if (args.compress) {
         printJsonVal(parseValue());
     }

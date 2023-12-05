@@ -189,10 +189,12 @@ struct JsonVal* parseObject() {
 		else if (keyVal != NULL && c == ':') JsonObjInsert(obj, keyVal, parseValue());
 		else {
 			fprintf(stderr, "Unexcepted token %c at %ld", c, ftell(f));
+			exit(1);
 		}
 	}
 	if (c != '}') {
 		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f));
+		exit(1);
 	}
 	res->obj = obj;
 	return res;
@@ -208,7 +210,7 @@ struct JsonVal* parseArray() {
 		ignoreWhiteCharactor(); JsonArrayPushBack(arr, parseValue());
 	}
 	if (c != ']') {
-		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f));
+		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f)); exit(1);
 	}
 	res->arr = arr;
 	return res;
