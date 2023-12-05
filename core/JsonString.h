@@ -15,6 +15,4 @@ struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* e
 struct JsonString* JsonString_New();
 
 
-void destoyJsonString(struct JsonString* str) {
-	free(str->str); free(str);
-}
+void destoyJsonString(struct JsonString* str);

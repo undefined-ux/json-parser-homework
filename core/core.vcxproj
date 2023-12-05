@@ -132,6 +132,7 @@
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonString.h" />
     <ClInclude Include="JsonValue.h" />
+    <ClInclude Include="outputer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonArray.c" />
@@ -139,6 +140,10 @@
     <ClCompile Include="JsonObject.h" />
     <ClCompile Include="JsonString.c" />
     <ClCompile Include="JsonValue.c" />
+    <ClCompile Include="outputer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ToDoList.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

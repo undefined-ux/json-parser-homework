@@ -34,6 +34,6 @@ struct JsonVal {
 };
 
 
-void printJsonVal(const struct JsonVal* val);
+
 
 #endif // JSON_VALUE_H

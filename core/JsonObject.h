@@ -10,4 +10,3 @@ struct JsonObj {
 };
 
 
-void printfObject(const struct JsonObj* obj);

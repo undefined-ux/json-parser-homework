@@ -27,6 +27,9 @@
     <ClInclude Include="Json.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="outputer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.h">
@@ -44,5 +47,13 @@
     <ClCompile Include="JsonValue.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="outputer.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ToDoList.md">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

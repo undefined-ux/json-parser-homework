@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include <string.h>
 
-// 可考虑对malloc进行封装， 处理内存分配失败问题
 
 struct JsonString* JsonStringFromCharArray(const char* str) {
 	size_t strlength = strlen(str) + 1;
@@ -82,4 +81,9 @@ struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* e
 		*writer = *reader;
 	*writer = 0; // for循环中已自增至字符串未应补0处
 	return res;
+}
+
+
+void destoyJsonString(struct JsonString* str) {
+	free(str->str); free(str);
 }
