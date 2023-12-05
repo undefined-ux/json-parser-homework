@@ -8,3 +8,6 @@ void printfString(const struct JsonString* str);
 void printJsonVal(const struct JsonVal* val);
 void printfObject(const struct JsonObj* obj);
 void printfArray(const struct JsonArray* array);
+void printfNONE();
+void printfBool(const struct JsonString* bl);
+void printfNumber(const struct JsonString* num);
