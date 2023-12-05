@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <string.h>
 
+// 可考虑对malloc进行封装， 处理内存分配失败问题
+
 struct JsonString* JsonStringFromCharArray(const char* str) {
 	size_t strlength = strlen(str) + 1;
 	if (strlength == 1) {
@@ -12,6 +14,11 @@ struct JsonString* JsonStringFromCharArray(const char* str) {
 		return JsonString_New();
 	}
 	struct JsonString* res = (struct JsonString*) malloc(sizeof(struct JsonString));
+	if (res == NULL) {
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
+		exit(1);
+	}
 	res->capacity = strlength;
 	res->length = strlength;
 	res->str = (char*)malloc(sizeof(char) * strlength);
@@ -23,6 +30,11 @@ struct JsonString* JsonStringFromCharArray(const char* str) {
 struct JsonString* JsonStringFromChar(const char c)
 {
 	struct JsonString* res = (struct JsonString*)malloc(sizeof(struct JsonString));
+	if (res == NULL) {
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
+		exit(1);
+	}
 	res->capacity = 10;
 	res->length = 2;
 	res->str = (char*)malloc(sizeof(char) * res->capacity);
@@ -33,6 +45,11 @@ struct JsonString* JsonStringFromChar(const char c)
 
 struct JsonString* JsonString_New() {
 	struct JsonString* res = (struct JsonString*)malloc(sizeof(struct JsonString));
+	if (res == NULL) {
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
+		exit(1);
+	}
 	res -> capacity = 10;
 	res -> length = 1;
 	res -> str = (char*)malloc(sizeof(char) * res->length);
@@ -52,6 +69,11 @@ struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* e
 	size_t length = 0;
 	for (char* s = start; s != end; s++) length++; length++;// 末尾补零用
 	struct JsonString* res = (struct JsonString*)malloc(sizeof(struct JsonString));
+	if (res == NULL) {
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
+		exit(1);
+	}
 	res->capacity = length; res->length = length; 
 	res->str = (char*)malloc(sizeof(char) * length);
 
