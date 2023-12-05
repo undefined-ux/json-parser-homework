@@ -4,6 +4,8 @@
 #include "Json.h"
 
 int main() {
+	// Initalize A Json Object
+
 	struct JsonArray arr;
 	arr.arr = (struct JsonVal *) malloc(sizeof(struct JsonVal) * 10);
 	arr.length = 10;
@@ -11,21 +13,29 @@ int main() {
 		arr.arr[i].type = NUMBER;
 		arr.arr[i].val = JsonStringFromChar((char)(i + '0'));
 	}
-	struct JsonVal* valArr = malloc(sizeof(struct JsonVal) * 4);
+	struct JsonVal v = {
+		STRING, JsonStringFromCharArray("Test")
+	};
+	struct JsonObj objVal = {
+		1, JsonStringFromCharArray("key"), &v
+	};
+	struct JsonVal* valArr = malloc(sizeof(struct JsonVal) * 5);
 	valArr[0].type = ARRAY; valArr[0].arr = &arr;
 	valArr[1].type = STRING; valArr[1].val = JsonStringFromCharArray("Test");
 	valArr[2].type = BOOL; valArr[2].val = JsonStringFromCharArray("True");
 	valArr[3].type = NONE;
-
-	struct JsonString* keyArr = malloc(sizeof(struct JsonString) * 4);
+	valArr[4].type = OBJECT; valArr[4].obj = &objVal;
+	
+	struct JsonString* keyArr = malloc(sizeof(struct JsonString) * 5);
 	keyArr[0] = *JsonStringFromCharArray("ArrayKey");
 	keyArr[1] = *JsonStringFromCharArray("StringKey");
 	keyArr[2] = *JsonStringFromCharArray("BoolKey");
 	keyArr[3] = *JsonStringFromCharArray("NoneKey");
-
+	keyArr[4] = *JsonStringFromCharArray("ObjectKey");
 	struct JsonObj obj = {
-		4, keyArr, valArr
+		5, keyArr, valArr
 	};
-	printfObject(&obj, 0);
+	printfObject(&obj, 0); printf("\n");
+	printObject(&obj);
 	return 0;
 }
