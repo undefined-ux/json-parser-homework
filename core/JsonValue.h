@@ -33,7 +33,4 @@ struct JsonVal {
 	};
 };
 
-
-
-
 #endif // JSON_VALUE_H

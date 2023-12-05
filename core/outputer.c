@@ -1,6 +1,6 @@
 #include "outputer.h"
 #include <stdio.h>
-FILE *f = stdout;
+static FILE *f = 0; // 初始化为空指针
 
 void setOutputStream(FILE* stream) { f = stream; }
 int max(int a, int b) { return a > b ? a : b; }

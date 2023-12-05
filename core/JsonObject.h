@@ -10,3 +10,4 @@ struct JsonObj {
 };
 
 
+void JsonObjInsert(struct JsonObj* obj, const struct JsonString* key, const struct JsonVal* value);
