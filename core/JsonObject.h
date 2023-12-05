@@ -8,3 +8,6 @@ struct JsonObj {
 	struct JsonString* key;
 	struct JsonVal* value;
 };
+
+
+void printfObject(const struct JsonObj* obj);

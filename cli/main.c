@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "JsonArray.h"
-#include "JsonObject.h"
-
+#include "Json.h"
 
 int main() {
 	struct JsonArray arr;
@@ -11,8 +9,7 @@ int main() {
 	arr.length = 10;
 	for (int i = 0; i < 10; i++) {
 		arr.arr[i].type = NUMBER;
-		char s = i + '0';
-		arr.arr[i].val = &s;
+		arr.arr[i].val = JsonStringFromChar((char)(i + '0'));
 	}
 
 	printfArray(&arr);

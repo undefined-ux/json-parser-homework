@@ -9,4 +9,4 @@ struct JsonArray {
 };
 
 
-void printfArray(struct JsonArray* array);
+void printfArray(const struct JsonArray* array);

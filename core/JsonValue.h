@@ -5,6 +5,7 @@
 
 #include "JsonArray.h"
 #include "JsonObject.h"
+#include "JsonString.h"
 
 typedef enum {
 	STRING,
@@ -26,13 +27,13 @@ typedef enum {
 struct JsonVal {
 	JsonType type;
 	union {
-		char* val; // String, Number, NONE, BOOL
+		struct JsonString* val; // String, Number, NONE, BOOL
 		struct JsonArray* arr;
 		struct JsonObj* obj;
 	};
 };
 
 
-void printJsonVal(struct JsonVal* val);
+void printJsonVal(const struct JsonVal* val);
 
 #endif // JSON_VALUE_H

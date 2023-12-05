@@ -1,6 +1,6 @@
 #include "JsonArray.h"
 
-void printfArray(struct JsonArray* array) {
+void printfArray(const struct JsonArray* array) {
 	printf("[");
 	if (array->length > 3) printf("\n");
 	for (int i = 0; i < array->length; i++) {
