@@ -9,7 +9,10 @@ struct JsonString {
 };
 
 
-void printfString(const struct JsonString* str);
 struct JsonString* JsonStringFromCharArray(const char* str);
 struct JsonString* JsonStringFromChar(const char c);
+struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* end);
 struct JsonString* JsonString_New();
+
+
+
