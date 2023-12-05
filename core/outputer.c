@@ -1,7 +1,12 @@
 #include "outputer.h"
+#include <stdio.h>
+FILE *f = stdout;
+
+void setOutputStream(FILE* stream) { f = stream; }
 int max(int a, int b) { return a > b ? a : b; }
+
 void indent(int hierarchy) {
-	for (int i = 0; i < max(hierarchy, 0); i++) printf("    "); 
+	for (int i = 0; i < max(hierarchy, 0); i++) fprintf(f, "    "); 
 	// 四空格缩进
 	// Reason：
 	//		暂无标准
@@ -50,10 +55,10 @@ void printJsonVal(struct JsonVal* val) {
 
 void printString(const struct JsonString* str) {
 	if (!str->length) {
-		printf("\"\"");
+		fprintf(f, "\"\"");
 	}
 	else {
-		printf("\"%s\"", str->str);
+		fprintf(f, "\"%s\"", str->str);
 	}
 }
 
@@ -61,51 +66,51 @@ void printfObject(const struct JsonObj* obj, int hierarchy) {
 	 printf("{\n");
 	for (int i = 0; i < obj->size; i++) {
 		indent(hierarchy + 1);
-		printString(obj->key + i); printf(": ");
+		printString(obj->key + i); fprintf(f, ": ");
 		printfJsonVal((obj->value + i), hierarchy);
-		if (i != obj->size - 1) printf(",");
-		printf("\n");
+		if (i != obj->size - 1) fprintf(f, ",");
+		fprintf(f, "\n");
 	}
-	indent(hierarchy); printf("}");
+	indent(hierarchy); fprintf(f, "}");
 }
 
 
 
 void printfArray(const struct JsonArray* array, int hierarchy) {
-	printf("[\n");
+	fprintf(f, "[\n");
 	for (int i = 0; i < array->length; i++) {
 		indent(hierarchy + 1);
 		printfJsonVal(&((array->arr)[i]), hierarchy + 1);
-		if (i != array->length - 1) printf(","); printf("\n");
+		if (i != array->length - 1) fprintf(f, ","); fprintf(f, "\n");
 	}
-	indent(hierarchy); printf("]");
+	indent(hierarchy); fprintf(f, "]");
 }
 
 
 void printNumber(const struct JsonString* num) {
-	printf("%s", num->str);
+	fprintf(f, "%s", num->str);
 }
 
 void printBool(const struct JsonString* bl) {
-	printf("%s", bl->str);
+	fprintf(f, "%s", bl->str);
 }
 
 void printNONE() {
-	printf("Null");
+	fprintf(f, "Null");
 }
 
 void printObject(const struct JsonObj* obj){
-	printf("{");
+	fprintf(f, "{");
 	for (int i = 0; i < obj->size; i++) {
-		printString(obj->key + i); printf(":");
+		printString(obj->key + i); fprintf(f, ":");
 		printJsonVal(obj->value + i);
-		if (i != obj->size - 1) printf(",");
-	} printf("}");
+		if (i != obj->size - 1) fprintf(f, ",");
+	} fprintf(f, "}");
 }
 void printArray(const struct JsonArray* array){
-	printf("[");
+	fprintf(f, "[");
 	for (int i = 0; i < array->length; i++) {
 		printJsonVal(array->arr + i);
-		if (i != array->length - 1) printf(",");
-	}printf("]");
+		if (i != array->length - 1) fprintf(f, ",");
+	}fprintf(f, "]");
 }

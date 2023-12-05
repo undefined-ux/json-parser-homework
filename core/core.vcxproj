@@ -133,6 +133,7 @@
     <ClInclude Include="JsonString.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="outputer.h" />
+    <ClInclude Include="parser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonArray.c" />
@@ -141,6 +142,7 @@
     <ClCompile Include="JsonString.c" />
     <ClCompile Include="JsonValue.c" />
     <ClCompile Include="outputer.c" />
+    <ClCompile Include="parser.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ToDoList.md" />

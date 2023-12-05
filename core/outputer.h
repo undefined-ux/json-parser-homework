@@ -4,6 +4,9 @@
 #include "JsonValue.h"
 #include "JsonArray.h"
 
+FILE* f = stdout;
+
+void setOutputStream(FILE* stream) { f = stream; }
 void printString(const struct JsonString* str);
 void printfJsonVal(struct JsonVal* val, int hierarchy);
 void printJsonVal(struct JsonVal* val);
