@@ -3,8 +3,8 @@
 #include "JsonString.h"
 #include "JsonValue.h"
 
-typedef struct JsonObj {
+struct JsonObj {
 	size_t size;
-	JsonString* key;
-	JsonVal* value;
-} JsonObj;
+	struct JsonString* key;
+	struct JsonVal* value;
+};

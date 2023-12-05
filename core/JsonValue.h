@@ -1,6 +1,10 @@
 #pragma once
 
+#ifndef JSON_VALUE_H
+#define JSON_VALUE_H
+
 #include "JsonArray.h"
+#include "JsonObject.h"
 
 typedef enum {
 	STRING,
@@ -19,11 +23,16 @@ typedef enum {
 /// 否则Json因JavaScript自带高精，JSON对象不限制Number大小及精度。导致JSON中Number需自行实现高精
 /// Type定义见JsonType， 用于判定格式并使用对应方法输出
 /// </summary>
-typedef struct JsonVal {
+struct JsonVal {
 	JsonType type;
 	union {
 		char* val; // String, Number, NONE, BOOL
-		JsonArray* arr;
-		JsonObj* obj;
+		struct JsonArray* arr;
+		struct JsonObj* obj;
 	};
-} JsonVal;
+};
+
+
+void printJsonVal(struct JsonVal* val);
+
+#endif // JSON_VALUE_H
