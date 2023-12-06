@@ -26,9 +26,9 @@ void printfJsonVal(struct JsonVal* val, int hierarchy) {
 	case BOOL:
 		printBool(val->val); break;
 	case ARRAY:
-		printfArray(val->arr, hierarchy + 1); break;
+		printfArray(val->arr, hierarchy); break;
 	case OBJECT:
-		printfObject(val->obj, hierarchy + 1); break;
+		printfObject(val->obj, hierarchy); break;
 	default:
 		break;
 	}
@@ -62,12 +62,12 @@ void printString(const struct JsonString* str) {
 	}
 }
 
-void printfObject(const struct JsonObj* obj, int hierarchy) {
+void printfObject(const struct JsonObj* obj, const int hierarchy) {
 	 printf("{\n");
 	for (int i = 0; i < obj->size; i++) {
 		indent(hierarchy + 1);
 		printString(obj->key + i); fprintf(f, ": ");
-		printfJsonVal((obj->value + i), hierarchy);
+		printfJsonVal((obj->value + i), hierarchy + 1);
 		if (i != obj->size - 1) fprintf(f, ",");
 		fprintf(f, "\n");
 	}
