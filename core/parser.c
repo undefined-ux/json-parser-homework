@@ -11,33 +11,34 @@ void ignoreWhiteCharactor() {
 	char c;
 	while (
 		(c = fgetc(f)) != EOF &&
-		(c == ' ' || c == '\r' || c == '\n')
+		(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == '\r')
 		);
-	if (!feof(f)) {
-		fseek(f, -sizeof(char), SEEK_CUR);
+	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == '\r' || c == EOF)) {
+		ungetc(c, f);
 	}
 }
 
 
 struct JsonVal* parseValue() {
+	ignoreWhiteCharactor();
 	char c = fgetc(f);
 	if (c == '{') return parseObject();
 	else if (c == '[') return parseArray();
 	else if (c == 'n') return parseNull();
-	else if (c == 't' || c == 'f') {
-		fseek(f, -sizeof(char), SEEK_CUR);
+	else if (c == 't' || c == 'T' || c == 'F' || c == 'f') {
+		ungetc(c, f);
 		return parseBool();
 	}
-	else if (c <= '9' && c >= '0') {
-		fseek(f, -sizeof(char), SEEK_CUR); 
+	else if (c <= '9' && c >= '0' || c == '-') {
+		ungetc(c, f);
 		return parseNumber();
 	}
 	else if (c == '"' || c == '\'') return parseString();
 	else {
 		fprintf(
 			stderr,
-			"Unexcepted token %c at %ld",
-			c, ftell(f)
+			"Unexcepted token %c at %llu",
+			c, ftell(f) / sizeof(char)
 		); exit(1);
 	}
 }
@@ -45,8 +46,10 @@ struct JsonVal* parseValue() {
 struct JsonVal* parseString() {
 	char c; struct JsonString* str = JsonString_New();
 	size_t pos = ftell(f) / sizeof(char);
-	while ((c = fgetc(f)) && c != EOF && c != '"' && c != '\'') 
+	while ((c = fgetc(f)) && c != EOF && c != '"' && c != '\'') {
 		JsonStringPushBackChar(c, str);
+	}
+		
 	if (c != '"' && c != '\'') {
 		fprintf(
 			stderr, 
@@ -67,27 +70,45 @@ struct JsonVal* parseString() {
 
 
 struct JsonVal* parseNumber() {
-	char c; struct JsonString* str = JsonString_New();
-	int isFloat = 0;
-	while ((c = fgetc(f)) && c != EOF && c != ',') {
+	char c;
+	struct JsonString* str = JsonString_New();
+	int isFloat = 0 , isNegative = 0;
+
+	// 修复了循环条件，添加了对换行符和空格的判断
+	while ((c = fgetc(f)) != EOF && ((c >= '0' && c <= '9') || c == '-' || c == '.')) {
 		JsonStringPushBackChar(c, str);
-		if (c == '.' && !isFloat) isFloat = 1;
+		if (c == '-' && !isNegative) {
+			isNegative = 1;
+		}
+		else if (c == '-' && isNegative) {
+			fprintf(
+				stderr,
+				"Expected character [1-9], but got '.' at %llu",
+				ftell(f) / sizeof(char)
+			);
+			exit(1);
+		}
+		if (c == '.' && !isFloat) {
+			isFloat = 1;
+		}
 		else if (c == '.' && isFloat) {
 			fprintf(
 				stderr,
-				"Excepted charactor [1-9], but got '.' at %ld",
-				ftell(f)
-			); // 写入报错到标准错误流
+				"Expected character [1-9], but got '.' at %llu",
+				ftell(f) / sizeof(char)
+			);
 			exit(1);
 		}
 	}
+
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
-		// 内存分配失败 OOM (?)
-		// 异常退出， OS进行内存回收
+		// 内存分配失败
 		exit(1);
 	}
-	res->type = NUMBER; res->val = str;
+
+	res->type = NUMBER;
+	res->val = str;
 	return res;
 }
 
@@ -103,8 +124,8 @@ struct JsonVal* parseBool() {
 			if (c != trueStr[i] && c != trueStr[i] - 'a' + 'A') {
 				fprintf(
 					stderr,
-					"Excepted value at %ld",
-					ftell(f)
+					"Unexcepted value at %llu",
+					ftell(f) / sizeof(char)
 				); // 写入报错到标准错误流
 				exit(1);
 			}
@@ -113,12 +134,12 @@ struct JsonVal* parseBool() {
 		if (c != ' ' && c != '\n' && c != ',' && c != ']' && c != '}') {
 			fprintf(
 				stderr,
-				"Excepted token %c at %ld",
-				c, ftell(f)
+				"Unexcepted token %c at %llu",
+				c, ftell(f) / sizeof(char)
 			); // 写入报错到标准错误流
 			exit(1);
 		}
-		fseek(f, -sizeof(char), SEEK_CUR);
+		ungetc(c, f);
 		struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 		if (res == NULL) {
 			// 内存分配失败 OOM (?)
@@ -136,8 +157,8 @@ struct JsonVal* parseBool() {
 			if (c != falseStr[i] && c != falseStr[i] - 'a' + 'A') {
 				fprintf(
 					stderr,
-					"Excepted token %c at %ld",
-					c, ftell(f)
+					"Unxcepted token %c at %llu",
+					c, ftell(f) / sizeof(char)
 				); // 写入报错到标准错误流
 				exit(1);
 			}
@@ -146,12 +167,12 @@ struct JsonVal* parseBool() {
 		if (c != ' ' && c != '\n' && c != ',' && c != ']' && c != '}') {
 			fprintf(
 				stderr,
-				"Excepted token %c at %ld",
-				c, ftell(f)
+				"Unxcepted token %c at %llu",
+				c, ftell(f) / sizeof(char)
 			); // 写入报错到标准错误流
 			exit(1);
 		}
-		fseek(f, -sizeof(char), SEEK_CUR);
+		ungetc(c, f);
 		struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 		if (res == NULL) {
 			// 内存分配失败 OOM (?)
@@ -164,8 +185,8 @@ struct JsonVal* parseBool() {
 	else {
 		fprintf(
 			stderr,
-			"Unexcepted token %c at %ld",
-			c, ftell(f)
+			"Unexcepted token %c at %llu",
+			c, ftell(f) / sizeof(char)
 		); // 写入报错到标准错误流
 		exit(1);
 	}
@@ -184,17 +205,15 @@ struct JsonVal* parseObject() {
 	obj->size = 0; int isClosed = 0;
 
 	while ((c = fgetc(f)) != EOF && c != '}') {
-		if (c == " " || c == "\n" || c == "\r" || c == ',') continue;
+		if (c == ' ' || c == '\n' || c == '\r' || c == ',') continue;
 		else if (c == '"' || c == '\'') keyVal = parseString()->val;
 		else if (keyVal != NULL && c == ':') JsonObjInsert(obj, keyVal, parseValue());
 		else {
-			fprintf(stderr, "Unexcepted token %c at %ld", c, ftell(f));
-			exit(1);
+			fprintf(stderr, "Unexcepted token %c at %llu", c, ftell(f) / sizeof(char)); exit(1);
 		}
 	}
 	if (c != '}') {
-		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f));
-		exit(1);
+		fprintf(stderr, "Unexcepted token EOF at %llu", ftell(f) / sizeof(char)); exit(1);
 	}
 	res->obj = obj;
 	return res;
@@ -203,14 +222,33 @@ struct JsonVal* parseObject() {
 struct JsonVal* parseArray() {
 	struct JsonArray* arr = (struct JsonArray*)malloc(sizeof(struct JsonArray));
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
-	if (arr == NULL) exit(1); if (res == NULL) exit(1);
+
+	if (arr == NULL || res == NULL) exit(1);
 	res->type = ARRAY; arr->length = 0; 
 	char c;
+	ignoreWhiteCharactor(f);
+
 	while ((c = fgetc(f)) != EOF && c != ']') {
-		ignoreWhiteCharactor(); JsonArrayPushBack(arr, parseValue());
+		ignoreWhiteCharactor();
+
+		if (arr->length > 0) {
+			if (c == ',') {
+				ignoreWhiteCharactor();
+			}
+			else {
+				fprintf(stderr, "Expected ',' but got '%c' at %llu\n", c, ftell(f) / sizeof(char));
+				exit(1);
+			}
+		}
+
+		if(c != ',') ungetc(c, f);
+		struct JsonVal* val = parseValue();
+		JsonArrayPushBack(arr, val);
+
+		ignoreWhiteCharactor();
 	}
 	if (c != ']') {
-		fprintf(stderr, "Unexcepted token EOF at %ld", ftell(f)); exit(1);
+		fprintf(stderr, "Unexcepted token EOF at %llu", ftell(f) / sizeof(char)); exit(1);
 	}
 	res->arr = arr;
 	return res;
@@ -223,8 +261,8 @@ struct JsonVal* parseNull() {
 		if (c != nullStr[i] && c != nullStr[i] - 'a' + 'A') {
 			fprintf(
 				stderr,
-				"Excepted token %c at %ld",
-				c, ftell(f)
+				"Excepted token %c at %llu",
+				c, ftell(f) / sizeof(char)
 			); // 写入报错到标准错误流
 			exit(1);
 		}
@@ -233,12 +271,12 @@ struct JsonVal* parseNull() {
 	if (c != ' ' && c != '\n' && c != ',' && c != ']' && c != '}') {
 		fprintf(
 			stderr,
-			"Excepted token %c at %ld",
-			c, ftell(f)
+			"Excepted token %c at %llu",
+			c, ftell(f) / sizeof(char)
 		); // 写入报错到标准错误流
 		exit(1);
 	}
-	fseek(f, -sizeof(char), SEEK_CUR);
+	ungetc(c, f);
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
 		// 内存分配失败 OOM (?)

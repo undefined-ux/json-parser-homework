@@ -33,4 +33,6 @@ struct JsonVal {
 	};
 };
 
+
+void destoryJsonVal(struct JsonVal* val);
 #endif // JSON_VALUE_H

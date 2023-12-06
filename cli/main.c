@@ -20,16 +20,20 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]);
 int main(int argc, char* argv[]) {
 	setlocale(LC_ALL, ""); // 设置本地化环境以支持宽字符
     struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
-	// Initalize A Json Object
+    // 设置输入输出流
+    // 默认为标准输入输出
 	setOutputStream(args.output);
 	setInputStream(args.input);
-
+    //解析Json
+    struct JsonVal* json = parseValue();
     if (args.compress) {
-        printJsonVal(parseValue());
+        printJsonVal(json);
     }
     else if (args.format) {
-        printfJsonVal(parseValue(), 0);
+        printfJsonVal(json, 0);
     }
+
+    destoryJsonVal(json);
     if (args.input != stdin) {
         fclose(args.input);
     }

@@ -27,7 +27,7 @@ struct JsonString* JsonStringFromCharArray(const char* str) {
 		exit(1);
 	}
 	strncpy(res->str, str, strlength);
-	res->str[strlength + 1] = 0;
+	res->str[strlength] = 0;
 	return res;
 }
 
@@ -126,6 +126,6 @@ void JsonStringPushBackChar(const char c, struct JsonString* str) {
 }
 
 
-void destoyJsonString(struct JsonString* str) {
+void destoryJsonString(struct JsonString* str) {
 	free(str->str); free(str);
 }

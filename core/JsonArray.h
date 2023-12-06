@@ -12,4 +12,4 @@ struct JsonArray {
 struct JsonArray* JsonArrayFromArray(struct JsonVal* arr, size_t length);
 struct JsonArray* JsonArrayNew();
 void JsonArrayPushBack(struct JsonArray* arr, struct JsonVal* val);
-void destroyJsonArray(struct JsonArray* arr);
+void destoryJsonArray(struct JsonArray* arr);

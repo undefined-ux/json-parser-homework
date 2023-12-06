@@ -40,12 +40,14 @@ struct JsonArray* JsonArrayNew()
 
 void JsonArrayPushBack(struct JsonArray* arr, struct JsonVal* val) {
 	arr->length++;
-	arr->arr = (struct JsonArray*)realloc(arr->arr, sizeof(struct JsonArray) * arr->length);
-	if (arr->arr == NULL) exit(1);
+	struct JsonVal* tempArr = (struct JsonVal*)malloc(sizeof(struct JsonArray) * arr->length);
+	if (tempArr == NULL) exit(1);
+	for (size_t i = 0; i < arr->length - 1; i++) tempArr[i] = arr->arr[i];
+	arr->arr = tempArr;
 	arr->arr[arr->length - 1] = *val;
 }
 
-void destroyJsonArray(struct JsonArray* arr) {
+void destoryJsonArray(struct JsonArray* arr) {
 	if (arr == NULL) return;
 	for (size_t i = 0; i < arr->length; i++) 
 		if(arr->arr + i != NULL) 
