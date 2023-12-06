@@ -22,8 +22,9 @@ int main(int argc, char* argv[]) {
     struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
     // 设置输入输出流
     // 默认为标准输入输出
+    setInputStream(args.input);
 	setOutputStream(args.output);
-	setInputStream(args.input);
+	
     //解析Json
     struct JsonVal* json = parseValue();
     if (args.compress) {
@@ -33,7 +34,7 @@ int main(int argc, char* argv[]) {
         printfJsonVal(json, 0);
     }
 
-    destoryJsonVal(json);
+    //destoryJsonVal(json);
     if (args.input != stdin) {
         fclose(args.input);
     }
@@ -61,6 +62,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
         if (strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-of") == 0) {
             // 指定输出流
             if (i + 1 < argc) {
+                printf("Output: %s\n", argv[i + 1]);
                 args.output = fopen(argv[i + 1], "w");
                 if (args.output == NULL) {
                     perror("Error opening output file");

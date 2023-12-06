@@ -1,5 +1,6 @@
 #include "outputer.h"
 #include <stdio.h>
+
 static FILE *f = 0; // 初始化为空指针
 
 void setOutputStream(FILE* stream) { f = stream; }
@@ -63,7 +64,7 @@ void printString(const struct JsonString* str) {
 }
 
 void printfObject(const struct JsonObj* obj, const int hierarchy) {
-	 printf("{\n");
+	fprintf(f, "{\n");
 	for (int i = 0; i < obj->size; i++) {
 		indent(hierarchy + 1);
 		printString(obj->key + i); fprintf(f, ": ");
