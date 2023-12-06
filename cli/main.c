@@ -109,6 +109,26 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             args.format = 1;
             formatSeen = 1;
         }
+        else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            printf("用法：json [选项]...\n");
+            printf("从输入中解析和格式化JSON数据，可选择压缩或格式化输出。\n\n");
+
+            printf("长选项的强制性参数对于短选项也是强制性的。\n");
+            printf("    -if, --input 指定输入文件（默认为标准输入）\n");
+            printf("    -of, --output 指定输出文件（默认为标准输出）\n");
+            printf("    -f, --format 使用树形缩进输出格式化的JSON\n");
+            printf("    -c, --compress 输出压缩的JSON\n");
+            printf("    -h, --help 显示此帮助并退出\n\n");
+
+            printf("示例：\n");
+            printf("    json -if input.json -of output.json -f\n");
+            printf("    json --input=input.json --output=output.json --compress\n\n");
+
+            printf("如果未指定输入或输出文件，则程序将默认使用标准输入或标准输出。\n\n");
+
+            printf("注意：--compress 和 --format 选项不能同时使用。\n");
+            exit(0);
+        }
         else {
             fprintf(stderr, "Unknown option: %s\n", argv[i]);
             exit(EXIT_FAILURE);
