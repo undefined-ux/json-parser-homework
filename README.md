@@ -2,6 +2,10 @@
 
 ## json解析器
 
+[下载](https://github.com/undefined-ux/json-parser-homework/releases)
+
+
+[文档](https://undefined-ux.github.io/json-parser-homework)
 ### 命令行版本
 
 #### 使用
@@ -14,6 +18,6 @@
 -h, --help 显示此帮助并退出
 -c, --compress 输出压缩的JSON
 ```
-[下载](https://github.com/undefined-ux/json-parser-homework/releases)
-[文档](https://undefined-ux.github.io/json-parser-homework)
+
+### GUI
 <del>GUI目前仍然是饼， 没做</del> 
