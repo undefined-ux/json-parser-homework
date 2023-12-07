@@ -24,8 +24,7 @@ void JsonObjInsert(
 }
 
 void destoryJsonObj(struct JsonObj* obj) {
-	for (int i = 0; i < obj->size; i++) {
-		destoryJsonString(obj->key + i);
-		destoryJsonVal(obj->value + i);
-	}
+	if(obj->key != NULL) destoryJsonString(obj->key);
+	if(obj->val != NULL) destoryJsonVal(obj->value);
+
 }

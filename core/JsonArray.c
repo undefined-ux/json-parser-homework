@@ -49,8 +49,6 @@ void JsonArrayPushBack(struct JsonArray* arr, struct JsonVal* val) {
 
 void destoryJsonArray(struct JsonArray* arr) {
 	if (arr == NULL) return;
-	for (size_t i = 0; i < arr->length; i++) 
-		if(arr->arr + i != NULL) 
-			free(arr->arr + i); // Avoid double free
+	if(arr->arr != NULL) free(arr->arr); // Avoid double free
 	free(arr);
 }
