@@ -35,6 +35,7 @@ module.exports = {
     lastUpdated: "最近更新于", 
     subSidebar: 'auto',
     sidebar: [
+      {title: "Start up", path: '/required'},
       {
         title: '命令行',   // required
         path: '/cli/',      // optional, link of the title, which should be an absolute path and must exist
