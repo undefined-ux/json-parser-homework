@@ -1,4 +1,3 @@
-#pragma once
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +17,21 @@ void ignoreWhiteCharactor() {
 	}
 }
 
+int hexCharToInt(char c) {
+	if ('0' <= c && c <= '9') {
+		return c - '0';
+	}
+	else if ('a' <= c && c <= 'f') {
+		return 10 + c - 'a';
+	}
+	else if ('A' <= c && c <= 'F') {
+		return 10 + c - 'A';
+	}
+	else {
+		fprintf(stderr, "Invalid hexadecimal character: %c\n", c);
+		exit(1);
+	}
+}
 
 struct JsonVal* parseValue() {
 	ignoreWhiteCharactor();
@@ -47,29 +61,93 @@ struct JsonVal* parseValue() {
 }
 
 struct JsonVal* parseString() {
-	char c; struct JsonString* str = JsonString_New();
+	char c;
+	struct JsonString* str = JsonString_New();
 	size_t pos = ftell(f) / sizeof(char);
+
 	while ((c = fgetc(f)) && c != EOF && c != '"' && c != '\'') {
-		JsonStringPushBackChar(c, str);
+		if (c == '\\') { // Check for escape character
+			c = fgetc(f); // Read the next character after '\'
+			if (c == EOF) {
+				fprintf(stderr, "Unexpected EOF after escape character.\tString value parse begin with %llu\n", pos);
+				exit(1);
+			}
+			// Process escaped character
+			switch (c) {
+			case '"':
+			case '\'':
+			case '\\':
+				// These characters are escaped as themselves
+				JsonStringPushBackChar(c, str);
+				break;
+			case 'n':
+				JsonStringPushBackChar('\n', str);
+				break;
+			case 't':
+				JsonStringPushBackChar('\t', str);
+				break;
+			case 'u': {
+				// Unicode escape sequence: \uXXXX
+				int unicodeValue = 0;
+				for (int i = 0; i < 4; ++i) {
+					c = fgetc(f);
+					if (c == EOF) {
+						fprintf(stderr, "Unexpected EOF in Unicode escape sequence.\tString value parse begin with %llu\n", pos);
+						exit(1);
+					}
+					unicodeValue = unicodeValue * 16 + hexCharToInt(c);
+				}
+				// Assuming JsonStringPushBackUnicode is a function that appends a Unicode character to the string
+				JsonStringPushBackChar(unicodeValue, str);
+				break;
+			}
+			case '0':
+				// Null character
+				JsonStringPushBackChar('\0', str);
+				break;
+			case 'x': {
+				// Hexadecimal escape sequence: \xXX
+				int hexValue = 0;
+				for (int i = 0; i < 2; ++i) {
+					c = fgetc(f);
+					if (c == EOF) {
+						fprintf(stderr, "Unexpected EOF in hexadecimal escape sequence.\tString value parse begin with %llu\n", pos);
+						exit(1);
+					}
+					hexValue = hexValue * 16 + hexCharToInt(c);
+				}
+				JsonStringPushBackChar((char)hexValue, str);
+				break;
+			}
+					// Add more cases for other escape sequences as needed
+			default:
+				fprintf(stderr, "Invalid escape sequence: \\%c\tString value parse begin with %llu\n", c, pos);
+				exit(1);
+			}
+		}
+		else {
+			JsonStringPushBackChar(c, str);
+		}
 	}
-		
+
 	if (c != '"' && c != '\'') {
-		fprintf(
-			stderr, 
-			"Excepted charactor \" or ', but got EOF.\tString value parse begin with %llu\n",
-			pos
-		); // 写入报错到标准错误流
+		fprintf(stderr, "Expected character \" or ', but got EOF.\tString value parse begin with %llu\n", pos);
 		exit(1);
 	}
+
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
-		// 内存分配失败 OOM (?)
-		// 异常退出， OS进行内存回收
+		// Memory allocation failure (OOM)
+		// Handle the error and exit
 		exit(1);
 	}
-	res->type = STRING; res->val = str;
+
+	res->type = STRING;
+	res->val = str;
 	return res;
 }
+
+
 
 
 struct JsonVal* parseNumber() {
