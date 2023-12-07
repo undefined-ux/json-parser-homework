@@ -16,7 +16,7 @@ void indent(int hierarchy) {
 	// XXX: 实现setIndentation // XXX vs无高亮？
 }
 
-void printfJsonVal(struct JsonVal* val, int hierarchy) {
+void printfJsonVal(const struct JsonVal* val, const int hierarchy) {
 	switch (val->type){
 	case NUMBER:
 		printNumber(val->val); break;
@@ -35,7 +35,7 @@ void printfJsonVal(struct JsonVal* val, int hierarchy) {
 	}
 }
 
-void printJsonVal(struct JsonVal* val) {
+void printJsonVal(const struct JsonVal* val) {
 	switch (val->type) {
 	case NUMBER:
 		printNumber(val->val); break;
@@ -59,7 +59,16 @@ void printString(const struct JsonString* str) {
 		fprintf(f, "\"\"");
 	}
 	else {
-		fprintf(f, "\"%s\"", str->str);
+		fprintf(f, "\"");
+		for(int i = 0; i < str->length; i++) {
+			if(str->str[i] == '\n') fprintf(f, "\\n");
+			else if (str->str[i] == '\t') fprintf(f, "\\t");
+			else if (str->str[i] == '\r')fprintf(f, "\\r");
+			else if (str->str[i] == '"')fprintf(f, "\\\"");
+			else if (str->str[i] == '\'')fprintf(f, "\\'");
+			else fprintf(f, "%c", str->str[i]);
+		}
+		fprintf(f, "\"");
 	}
 }
 

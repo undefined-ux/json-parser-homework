@@ -17,16 +17,16 @@ struct CommandLineArgs {
 // 函数声明
 struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]);
 
-int main(int argc, char* argv[]) {
-	setlocale(LC_ALL, ""); // 设置本地化环境以支持宽字符
-    struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
+int main(const int argc, char* argv[]) {
+	// setlocale(LC_ALL, ""); // 设置本地化环境以支持宽字符
+    const struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
     // 设置输入输出流
     // 默认为标准输入输出
     setInputStream(args.input);
 	setOutputStream(args.output);
 	
     //解析Json
-    struct JsonVal* json = parseValue();
+    const struct JsonVal* json = parseValue();
     if (args.compress) {
         printJsonVal(json);
     }

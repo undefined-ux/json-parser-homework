@@ -6,8 +6,8 @@
 
 void setOutputStream(FILE* stream);
 void printString(const struct JsonString* str);
-void printfJsonVal(struct JsonVal* val, int hierarchy);
-void printJsonVal(struct JsonVal* val);
+void printfJsonVal(const struct JsonVal* val, int hierarchy);
+void printJsonVal(const struct JsonVal* val);
 void printfObject(const struct JsonObj* obj, int hierarchy);
 void printfArray(const struct JsonArray* array, int hierarchy);
 void printNONE();

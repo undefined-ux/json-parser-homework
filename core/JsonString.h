@@ -10,9 +10,9 @@ struct JsonString {
 
 
 struct JsonString* JsonStringFromCharArray(const char* str);
-struct JsonString* JsonStringFromChar(const char c);
-struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* end);
+struct JsonString* JsonStringFromChar(char c);
+struct JsonString* JsonStringFromCharArraySlice(char* start, const char* end);
 struct JsonString* JsonString_New();
 
-void JsonStringPushBackChar(const char c, struct JsonString* str);
+void JsonStringPushBackChar(char c, struct JsonString* str);
 void destoryJsonString(struct JsonString* str);

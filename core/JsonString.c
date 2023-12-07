@@ -7,7 +7,7 @@
 
 
 struct JsonString* JsonStringFromCharArray(const char* str) {
-	size_t strlength = strlen(str);
+	const size_t strlength = strlen(str);
 	if (!strlength) {
 		// 空字符串
 		return JsonString_New();
@@ -54,7 +54,7 @@ struct JsonString* JsonStringFromChar(const char c)
 }
 
 struct JsonString* JsonString_New() {
-	struct JsonString* res = (struct JsonString*)malloc(sizeof(struct JsonString));
+	struct JsonString* res = malloc(sizeof(struct JsonString));
 	if (res == NULL) {
 		// 内存分配失败 OOM (?)
 		// 异常退出， OS进行内存回收
@@ -81,10 +81,10 @@ struct JsonString* JsonString_New() {
 /// <param name="end">末尾位置后一位的指针</param>
 /// <returns>struct JsonString* </returns>
 
-struct JsonString* JsonStringFromCharArraySlice(const char* start, const char* end) {
+struct JsonString* JsonStringFromCharArraySlice(char* start, const char* end) {
 	size_t length = 0;
 	for (char* s = start; s != end; s++) length++; length++;// 末尾补零用
-	struct JsonString* res = (struct JsonString*)malloc(sizeof(struct JsonString));
+	struct JsonString* res = malloc(sizeof(struct JsonString));
 	if (res == NULL) {
 		// 内存分配失败 OOM (?)
 		// 异常退出， OS进行内存回收
