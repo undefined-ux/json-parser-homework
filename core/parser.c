@@ -24,7 +24,10 @@ struct JsonVal* parseValue() {
 	char c = fgetc(f);
 	if (c == '{') return parseObject();
 	else if (c == '[') return parseArray();
-	else if (c == 'n') return parseNull();
+	else if (c == 'n' || c == 'N') {
+		ungetc(c, f);
+		return parseNull();
+	}
 	else if (c == 't' || c == 'T' || c == 'F' || c == 'f') {
 		ungetc(c, f);
 		return parseBool();
@@ -106,7 +109,7 @@ struct JsonVal* parseNumber() {
 		// 内存分配失败
 		exit(1);
 	}
-
+	ungetc(c, f);
 	res->type = NUMBER;
 	res->val = str;
 	return res;
@@ -146,6 +149,7 @@ struct JsonVal* parseBool() {
 			// 异常退出， OS进行内存回收
 			exit(1);
 		}
+
 		res->type = BOOL; res->val = JsonStringFromCharArray("true");
 		return res;
 	}
@@ -256,12 +260,12 @@ struct JsonVal* parseArray() {
 
 struct JsonVal* parseNull() {
 	char nullStr[] = "null", c;
-	for (int i = 1; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		c = fgetc(f);
 		if (c != nullStr[i] && c != nullStr[i] - 'a' + 'A') {
 			fprintf(
 				stderr,
-				"Excepted token %c at %llu",
+				"Unexcepted token %c at %llu",
 				c, ftell(f) / sizeof(char)
 			); // 写入报错到标准错误流
 			exit(1);
@@ -271,7 +275,7 @@ struct JsonVal* parseNull() {
 	if (c != ' ' && c != '\n' && c != ',' && c != ']' && c != '}') {
 		fprintf(
 			stderr,
-			"Excepted token %c at %llu",
+			"Unexcepted token %c at %llu",
 			c, ftell(f) / sizeof(char)
 		); // 写入报错到标准错误流
 		exit(1);
