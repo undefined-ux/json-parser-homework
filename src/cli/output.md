@@ -1,5 +1,7 @@
-# 输出格式化选项
-
+---
+title: 输出格式化选项
+sidebar: 'auto'
+---
 ::: warning
 注意：-c / --compress 和 -f / --format 选项不能同时使用
 :::

@@ -1,4 +1,7 @@
-# 总览
+---
+title: 总览
+sidebar: 'auto'
+---
 
 ```
 用法：json [选项]...
