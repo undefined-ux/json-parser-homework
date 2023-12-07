@@ -13,10 +13,9 @@ jobs:
       with:
         ref: document
     - name: vuepress-deploy
-      uses: jenkey2011/vuepress-deploy@master
+      uses: undefined-ux/vuepress-deploy@master
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         TARGET_REPO: undefined-ux/json-parser-homework
-        TARGET_BRANCH: document
         BUILD_SCRIPT:  yarn &&  yarn build
         BUILD_DIR: ./src/.vuepress/dist
