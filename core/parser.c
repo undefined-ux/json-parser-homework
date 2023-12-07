@@ -8,16 +8,13 @@ void setInputStream(FILE* stream) { f = stream; }
 
 void ignoreWhiteCharactor() {
 	char c;
-	while (
-		(c = fgetc(f)) != EOF &&
-		(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == '\r')
-		);
-	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == '\r' || c == EOF)) {
+	while ( (c = fgetc(f)) != EOF && (c == ' ' || c == '\r' || c == '\n' || c == '\t') );
+	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == EOF)) {
 		ungetc(c, f);
 	}
 }
 
-int hexCharToInt(char c) {
+int hexCharToInt(const char c) {
 	if ('0' <= c && c <= '9') {
 		return c - '0';
 	}
@@ -155,7 +152,7 @@ struct JsonVal* parseNumber() {
 	struct JsonString* str = JsonString_New();
 	int isFloat = 0 , isNegative = 0;
 
-	// ÐÞ¸´ÁËÑ­»·Ìõ¼þ£¬Ìí¼ÓÁË¶Ô»»ÐÐ·ûºÍ¿Õ¸ñµÄÅÐ¶Ï
+	// ä¿®å¤äº†å¾ªçŽ¯æ¡ä»¶ï¼Œæ·»åŠ äº†å¯¹æ¢è¡Œç¬¦å’Œç©ºæ ¼çš„åˆ¤æ–­
 	while ((c = fgetc(f)) != EOF && ((c >= '0' && c <= '9') || c == '-' || c == '.')) {
 		JsonStringPushBackChar(c, str);
 		if (c == '-' && !isNegative) {
@@ -184,7 +181,7 @@ struct JsonVal* parseNumber() {
 
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
-		// ÄÚ´æ·ÖÅäÊ§°Ü
+		// å†…å­˜åˆ†é…å¤±è´¥
 		exit(1);
 	}
 	ungetc(c, f);
@@ -207,7 +204,7 @@ struct JsonVal* parseBool() {
 					stderr,
 					"Unexcepted value at %llu",
 					ftell(f) / sizeof(char)
-				); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+				); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 				exit(1);
 			}
 		}
@@ -217,14 +214,14 @@ struct JsonVal* parseBool() {
 				stderr,
 				"Unexcepted token %c at %llu",
 				c, ftell(f) / sizeof(char)
-			); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+			); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 			exit(1);
 		}
 		ungetc(c, f);
 		struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 		if (res == NULL) {
-			// ÄÚ´æ·ÖÅäÊ§°Ü OOM (?)
-			// Òì³£ÍË³ö£¬ OS½øÐÐÄÚ´æ»ØÊÕ
+			// å†…å­˜åˆ†é…å¤±è´¥ OOM (?)
+			// å¼‚å¸¸é€€å‡ºï¼Œ OSè¿›è¡Œå†…å­˜å›žæ”¶
 			exit(1);
 		}
 
@@ -241,7 +238,7 @@ struct JsonVal* parseBool() {
 					stderr,
 					"Unxcepted token %c at %llu",
 					c, ftell(f) / sizeof(char)
-				); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+				); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 				exit(1);
 			}
 		}
@@ -251,14 +248,14 @@ struct JsonVal* parseBool() {
 				stderr,
 				"Unxcepted token %c at %llu",
 				c, ftell(f) / sizeof(char)
-			); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+			); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 			exit(1);
 		}
 		ungetc(c, f);
 		struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 		if (res == NULL) {
-			// ÄÚ´æ·ÖÅäÊ§°Ü OOM (?)
-			// Òì³£ÍË³ö£¬ OS½øÐÐÄÚ´æ»ØÊÕ
+			// å†…å­˜åˆ†é…å¤±è´¥ OOM (?)
+			// å¼‚å¸¸é€€å‡ºï¼Œ OSè¿›è¡Œå†…å­˜å›žæ”¶
 			exit(1);
 		}
 		res->type = BOOL; res->val = JsonStringFromCharArray("false");
@@ -269,7 +266,7 @@ struct JsonVal* parseBool() {
 			stderr,
 			"Unexcepted token %c at %llu",
 			c, ftell(f) / sizeof(char)
-		); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+		); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 		exit(1);
 	}
 }
@@ -289,7 +286,10 @@ struct JsonVal* parseObject() {
 	while ((c = fgetc(f)) != EOF && c != '}') {
 		if (c == ' ' || c == '\n' || c == '\r' || c == ',') continue;
 		else if (c == '"' || c == '\'') keyVal = parseString()->val;
-		else if (keyVal != NULL && c == ':') JsonObjInsert(obj, keyVal, parseValue());
+		else if (keyVal != NULL && c == ':') {
+			struct JsonObj* Val = parseValue();
+			JsonObjInsert(obj, keyVal, Val);
+		}
 		else {
 			fprintf(stderr, "Unexcepted token %c at %llu", c, ftell(f) / sizeof(char)); exit(1);
 		}
@@ -345,7 +345,7 @@ struct JsonVal* parseNull() {
 				stderr,
 				"Unexcepted token %c at %llu",
 				c, ftell(f) / sizeof(char)
-			); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+			); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 			exit(1);
 		}
 	}
@@ -355,14 +355,14 @@ struct JsonVal* parseNull() {
 			stderr,
 			"Unexcepted token %c at %llu",
 			c, ftell(f) / sizeof(char)
-		); // Ð´Èë±¨´íµ½±ê×¼´íÎóÁ÷
+		); // å†™å…¥æŠ¥é”™åˆ°æ ‡å‡†é”™è¯¯æµ
 		exit(1);
 	}
 	ungetc(c, f);
 	struct JsonVal* res = (struct JsonVal*)malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
-		// ÄÚ´æ·ÖÅäÊ§°Ü OOM (?)
-		// Òì³£ÍË³ö£¬ OS½øÐÐÄÚ´æ»ØÊÕ
+		// å†…å­˜åˆ†é…å¤±è´¥ OOM (?)
+		// å¼‚å¸¸é€€å‡ºï¼Œ OSè¿›è¡Œå†…å­˜å›žæ”¶
 		exit(1);
 	}
 	res->type = BOOL; res->val = JsonStringFromCharArray("false");

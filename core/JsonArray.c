@@ -6,19 +6,19 @@ struct JsonArray* JsonArrayFromArray(struct JsonVal* arr, size_t length)
 {
 	struct JsonArray* res = (struct JsonArray*)malloc(sizeof(struct JsonArray));
 	if (res == NULL) { // From JsonString
-		// �ڴ����ʧ�� OOM (?)
-		// �쳣�˳��� OS�����ڴ����
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
 		exit(1);
 	}
 	res->length = length; 
 	res->arr =(struct JsonVal* ) malloc(sizeof(struct JsonVal) * length);
 	if (res->arr == NULL) {
-		// �ڴ����ʧ�� OOM (?)
-		// �쳣�˳��� OS�����ڴ����
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
 		exit(1);
 	}
 	if (arr != NULL) {
-		// ��� arr�����Ƿ�ᱻ����δ֪
+		// 深拷贝 arr后续是否会被析构未知
 		for (size_t i = 0; i < length; i++) (res->arr)[i] = arr[i]; 
 	}
 	
@@ -29,8 +29,8 @@ struct JsonArray* JsonArrayNew()
 {
 	struct JsonArray* arr = (struct JsonArray*)malloc(sizeof(struct JsonArray));
 	if (arr == NULL) { // From JsonString
-		// �ڴ����ʧ�� OOM (?)
-		// �쳣�˳��� OS�����ڴ����
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
 		exit(1);
 	}
 	arr->length = 10; arr->arr =(struct JsonVal*) malloc(sizeof(struct JsonVal));

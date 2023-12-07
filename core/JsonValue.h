@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef JSON_VALUE_H
-#define JSON_VALUE_H
-
 #include "JsonArray.h"
 #include "JsonObject.h"
 #include "JsonString.h"
@@ -17,12 +14,12 @@ typedef enum {
 } JsonType;
 
 /// <summary>
-/// Json¶ÔÏóÖµ
-/// char* val °üº¬String£¬ Number£¬ None£¬ BoolÀàĞÍ
-/// ÒòÎª½öĞè½âÎö²¢¸ñÊ½»¯£¬Ñ¹Ëõ¼°Óï·¨¼ì²é¹¦ÄÜ£¬ ºóĞøÎŞÊıÖµ¸Ä¶¯µÈÄÚÈİ£¬ 
-/// ÓÚÊÇÊ¹ÓÃ×Ö·û´®±íÊ¾ÊµÏÖNumberµÈÀàĞÍ£¬ ¼õÉÙºóÆÚ¿ª·¢Ñ¹Á¦£¬ ·½±ã´æ´¢Öµ
-/// ·ñÔòJsonÒòJavaScript×Ô´ø¸ß¾«£¬JSON¶ÔÏó²»ÏŞÖÆNumber´óĞ¡¼°¾«¶È¡£µ¼ÖÂJSONÖĞNumberĞè×ÔĞĞÊµÏÖ¸ß¾«
-/// Type¶¨Òå¼ûJsonType£¬ ÓÃÓÚÅĞ¶¨¸ñÊ½²¢Ê¹ÓÃ¶ÔÓ¦·½·¨Êä³ö
+/// Jsonå¯¹è±¡å€¼
+/// char* val åŒ…å«Stringï¼Œ Numberï¼Œ Noneï¼Œ Boolç±»å‹
+/// å› ä¸ºä»…éœ€è§£æå¹¶æ ¼å¼åŒ–ï¼Œå‹ç¼©åŠè¯­æ³•æ£€æŸ¥åŠŸèƒ½ï¼Œ åç»­æ— æ•°å€¼æ”¹åŠ¨ç­‰å†…å®¹ï¼Œ 
+/// äºæ˜¯ä½¿ç”¨å­—ç¬¦ä¸²è¡¨ç¤ºå®ç°Numberç­‰ç±»å‹ï¼Œ å‡å°‘åæœŸå¼€å‘å‹åŠ›ï¼Œ æ–¹ä¾¿å­˜å‚¨å€¼
+/// å¦åˆ™Jsonå› JavaScriptè‡ªå¸¦é«˜ç²¾ï¼ŒJSONå¯¹è±¡ä¸é™åˆ¶Numberå¤§å°åŠç²¾åº¦ã€‚å¯¼è‡´JSONä¸­Numberéœ€è‡ªè¡Œå®ç°é«˜ç²¾
+/// Typeå®šä¹‰è§JsonTypeï¼Œ ç”¨äºåˆ¤å®šæ ¼å¼å¹¶ä½¿ç”¨å¯¹åº”æ–¹æ³•è¾“å‡º
 /// </summary>
 struct JsonVal {
 	JsonType type;
@@ -35,4 +32,3 @@ struct JsonVal {
 
 
 void destoryJsonVal(struct JsonVal* val);
-#endif // JSON_VALUE_H

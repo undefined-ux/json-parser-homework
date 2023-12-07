@@ -1,19 +1,19 @@
 #include "outputer.h"
 #include <stdio.h>
 
-static FILE *f = 0; // ³õÊ¼»¯Îª¿ÕÖ¸Õë
+static FILE *f = 0; // åˆå§‹åŒ–ä¸ºç©ºæŒ‡é’ˆ
 
 void setOutputStream(FILE* stream) { f = stream; }
 int max(int a, int b) { return a > b ? a : b; }
 
 void indent(int hierarchy) {
 	for (int i = 0; i < max(hierarchy, 0); i++) fprintf(f, "    "); 
-	// ËÄ¿Õ¸ñËõ½ø
-	// Reason£º
-	//		ÔÝÎÞ±ê×¼
-	//		PythonËÄ¿Õ¸ñËõ½øÏ°¹ßÁË
-	// XXX: ºóÐøÔö¼ÓÆäËüËõ½ø·½Ê½
-	// XXX: ÊµÏÖsetIndentation // XXX vsÎÞ¸ßÁÁ£¿
+	// å››ç©ºæ ¼ç¼©è¿›
+	// Reasonï¼š
+	//		æš‚æ— æ ‡å‡†
+	//		Pythonå››ç©ºæ ¼ç¼©è¿›ä¹ æƒ¯äº†
+	// XXX: åŽç»­å¢žåŠ å…¶å®ƒç¼©è¿›æ–¹å¼
+	// XXX: å®žçŽ°setIndentation // XXX vsæ— é«˜äº®ï¼Ÿ
 }
 
 void printfJsonVal(struct JsonVal* val, int hierarchy) {
