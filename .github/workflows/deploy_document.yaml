@@ -18,5 +18,5 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         TARGET_REPO: undefined-ux/json-parser-homework
         TARGET_BRANCH: document
-        BUILD_SCRIPT: NODE_OPTIONS=--openssl-legacy-provider yarn && NODE_OPTIONS=--openssl-legacy-provider yarn build
+        BUILD_SCRIPT:  yarn &&  yarn build
         BUILD_DIR: ./src/.vuepress/dist
