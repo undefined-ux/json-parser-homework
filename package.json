@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@vuepress/shared-utils": "^1.9.10",
-    "lru-cache": "^10.1.0",
     "markdown-it-emoji": "^2.0.2",
     "vuepress-theme-reco": "^1.6.17"
   }
