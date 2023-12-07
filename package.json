@@ -1,0 +1,19 @@
+{
+  "name": "docs",
+  "version": "0.0.1",
+  "description": "Document of Json-Parser",
+  "main": "index.js",
+  "authors": {
+    "name": "undefined",
+    "email": "undefined_1@outlook.com"
+  },
+  "repository": "https://github.com/undefined-ux/json-parser-homework/docs",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.3"
+  }
+}
