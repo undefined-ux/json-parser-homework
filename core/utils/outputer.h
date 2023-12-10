@@ -1,8 +1,8 @@
 #pragma once
-#include "JsonObject.h"
-#include "JsonString.h"
-#include "JsonValue.h"
-#include "JsonArray.h"
+#include "../types/JsonObject.h"
+#include "../types/JsonString.h"
+#include "../types/JsonValue.h"
+#include "../types/JsonArray.h"
 
 void setOutputStream(FILE* stream);
 void printString(const struct JsonString* str);

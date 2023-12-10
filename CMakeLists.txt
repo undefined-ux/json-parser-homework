@@ -5,18 +5,20 @@ set(CMAKE_C_STANDARD 17)
 
 add_library(jsonParserLib
         core/Json.h
-        core/parser.h
-        core/JsonValue.h
-        core/JsonArray.h
-        core/JsonObject.h
-        core/JsonString.h
-        core/outputer.h
-        core/parser.c
-        core/JsonValue.c
-        core/JsonArray.c
-        core/JsonObject.c
-        core/JsonString.c
-        core/outputer.c
+        core/parser/parser.h
+        core/types/JsonValue.h
+        core/types/JsonArray.h
+        core/types/JsonObject.h
+        core/types/JsonString.h
+        core/utils/outputer.h
+        core/parser/parser.c
+        core/types/JsonValue.c
+        core/types/JsonArray.c
+        core/types/JsonObject.c
+        core/types/JsonString.c
+        core/utils/outputer.c
+        core/utils/UTF2GBK.cpp
+        core/utils/UTF2GBK.h
 )
 
 add_executable(json
