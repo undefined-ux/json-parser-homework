@@ -12,6 +12,10 @@ struct CommandLineArgs {
 	FILE* output;        // 输出流
 	int compress;        // 是否压缩
 	int format;          // 是否格式化
+    int utf8Text;         // 是否为utf-8 文本 是则需资源回收时删除中间文件
+    char* convertCacheFilePath; // 为utf-8文本时转换为gbk格式时生成的临时文件
+    char* outputFilePath; // 需要输出文件路径， 当为utf-8文本时用于转换回utf-8文本
+
 };
 
 // 函数声明
@@ -40,6 +44,9 @@ int main(const int argc, char* argv[]) {
     }
     if (args.output != stdout) {
         fclose(args.output);
+        if(args.utf8Text) {
+            convertGbkToUtf8(args.output);
+        }
     }
 	return 0;
 }
@@ -53,7 +60,8 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
     args.output = stdout;
     args.compress = 0;
     args.format = 1;
-
+    args.utf8Text = 0;
+    args.convertCacheFilePath = "";
     // 标记是否已经出现了--format或--compress
     int formatSeen = 0;
     int compressSeen = 0;
@@ -64,6 +72,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             if (i + 1 < argc) {
                 printf("Output: %s\n", argv[i + 1]);
                 args.output = fopen(argv[i + 1], "w");
+                args.outputFilePath = argv[i+1];
                 if (args.output == NULL) {
                     perror("Error opening output file");
                     exit(EXIT_FAILURE);
@@ -78,7 +87,15 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
         else if (strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-if") == 0) {
             // 指定输入流
             if (i + 1 < argc) {
-                args.input = fopen(argv[i + 1], "r");
+                FILE* f = fopen(argv[i + 1], "r");
+                args.convertCacheFilePath = "__cache.json";
+                if(isUtf8(f)) {
+                    printf("INFO: Is UTF-8 Text\n");
+                    args.input = convertUtf8ToGbk(f,args.convertCacheFilePath);
+                    args.utf8Text = 1;
+                }else {
+                    args.input = fopen(argv[i + 1], "r");
+                }
                 if (args.input == NULL) {
                     perror("Error opening input file");
                     exit(EXIT_FAILURE);

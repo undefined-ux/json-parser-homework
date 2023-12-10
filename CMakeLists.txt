@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.27)
 
 PROJECT(JsonParser C)
 set(CMAKE_C_STANDARD 17)
-
 add_library(jsonParserLib
         core/Json.h
         core/parser/parser.h
@@ -11,15 +10,16 @@ add_library(jsonParserLib
         core/types/JsonObject.h
         core/types/JsonString.h
         core/utils/outputer.h
+        core/utils/outputer.c
         core/parser/parser.c
         core/types/JsonValue.c
         core/types/JsonArray.c
         core/types/JsonObject.c
         core/types/JsonString.c
-        core/utils/outputer.c
-        core/utils/UTF2GBK.cpp
-        core/utils/UTF2GBK.h
+        core/utils/utf2gbk/UTF2GBK.c
+        core/utils/utf2gbk/UTF2GBK.h
 )
+target_link_libraries(jsonParserLib PRIVATE iconv)
 
 add_executable(json
         cli/main.c
