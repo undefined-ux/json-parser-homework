@@ -2,3 +2,4 @@
 x64/
 cmake-build-debug/
 *.pdb.idea/
+cmake-build-release/

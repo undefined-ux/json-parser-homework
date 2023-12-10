@@ -12,13 +12,6 @@ void ignoreWhiteCharactor() {
 	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == EOF)) { ungetc(c, f); }
 }
 
-int hexCharToInt(const char c) {
-	if ('0' <= c && c <= '9') { return c - '0'; }
-	if ('a' <= c && c <= 'f') { return 10 + c - 'a'; }
-	if ('A' <= c && c <= 'F') { return 10 + c - 'A'; }
-	fprintf(stderr, "Invalid hexadecimal character: %c\n", c);
-	exit(1);
-}
 
 struct JsonVal* parseValue() {
 	ignoreWhiteCharactor();
@@ -245,7 +238,19 @@ struct JsonVal* parseObject() {
 
 		else if (c == ':') {
 			const struct JsonVal* Val = parseValue();
-			JsonObjInsert(obj, keyVal, Val);
+			if(keyVal == NULL) {
+				fprintf(stderr, "Unexcepted token %c at %llu", c, ftell(f) / sizeof(char));
+				exit(1);
+			}
+			JsonObjInsert(obj, keyVal, Val); ignoreWhiteCharactor();
+			c = fgetc(f);
+			if(c != ',' && c != '}') {
+				fprintf(stderr, "Unexcepted token %c at %llu", c, ftell(f) / sizeof(char));
+				exit(1);
+			}
+			if(c == '}') {
+				ungetc(c, f);
+			}
 		}
 		else {
 			fprintf(stderr, "Unexcepted token %c at %llu", c, ftell(f) / sizeof(char));
@@ -272,15 +277,6 @@ struct JsonVal* parseArray() {
 
 	while ((c = fgetc(f)) != EOF && c != ']') {
 		ignoreWhiteCharactor();
-
-		if (arr->length > 0) {
-			if (c == ',') { ignoreWhiteCharactor(); }
-			else {
-				fprintf(stderr, "Expected ',' but got '%c' at %llu\n", c, ftell(f) / sizeof(char));
-				exit(1);
-			}
-		}
-
 		if (c != ',') ungetc(c, f);
 		struct JsonVal* val = parseValue();
 		JsonArrayPushBack(arr, val);
