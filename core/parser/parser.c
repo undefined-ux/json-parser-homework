@@ -30,7 +30,7 @@ struct JsonVal* parseValue() {
 		ungetc(c, f);
 		return parseNumber();
 	}
-	if (c == '"' || c == '\'') return parseString();
+	if (c == '"' || c == '\'') return parseString(c);
 	fprintf(
 		stderr,
 		"Unexcepted token %c at %llu",
@@ -39,12 +39,12 @@ struct JsonVal* parseValue() {
 	exit(1);
 }
 
-struct JsonString* parseStringToStr() {
+struct JsonString* parseStringToStr(char token) {
 	char c;
 	struct JsonString* str = JsonString_New();
 	const size_t pos = ftell(f) / sizeof(char);
 
-	while ((c = fgetc(f)) && c != EOF && c != '"' && c != '\'') {
+	while ((c = fgetc(f)) && c != EOF && c != token) {
 		if (c == '\\') {
 			c = fgetc(f);
 			if (c == EOF) {
@@ -75,15 +75,15 @@ struct JsonString* parseStringToStr() {
 		else { JsonStringPushBackChar(c, str); }
 	}
 
-	if (c != '"' && c != '\'') {
-		fprintf(stderr, "Expected character \" or ', but got EOF.\tString value parse begin with %llu\n", pos);
+	if (c != token) {
+		fprintf(stderr, "Expected character %c, but got EOF.\tString value parse begin with %llu\n", token, pos);
 		exit(1);
 	}
 	return str;
 }
 
-struct JsonVal* parseString() {
-	struct JsonString* str = parseStringToStr();
+struct JsonVal* parseString(char token) {
+	struct JsonString* str = parseStringToStr(token);
 
 	struct JsonVal* res = malloc(sizeof(struct JsonVal));
 	if (res == NULL) {
@@ -234,7 +234,7 @@ struct JsonVal* parseObject() {
 
 	while ((c = fgetc(f)) != EOF && c != '}') {
 		if (c == ' ' || c == '\n' || c == '\r' || c == ',') continue;
-		if (c == '"' || c == '\'') keyVal = parseStringToStr();
+		if (c == '"' || c == '\'') keyVal = parseStringToStr(c);
 
 		else if (c == ':') {
 			const struct JsonVal* Val = parseValue();

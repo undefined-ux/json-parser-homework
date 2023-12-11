@@ -1,6 +1,11 @@
 .vs/
+.idea/
 x64/
 cmake-build-debug/
-*.pdb.idea/
 cmake-build-release/
 cmake-build-debug-mingw/
+*.pdb
+
+lcui-quick-start.zip
+package-lock.json
+-g/

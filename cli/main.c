@@ -6,78 +6,69 @@
 #include "Json.h"
 
 
-// ½á¹¹ÌåÓÃÓÚ´æ´¢ÃüÁîĞĞ²ÎÊıµÄÖµ
+// ç»“æ„ä½“ç”¨äºå­˜å‚¨å‘½ä»¤è¡Œå‚æ•°çš„å€¼
 struct CommandLineArgs {
-	FILE* input;         // ÊäÈëÁ÷
-	FILE* output;        // Êä³öÁ÷
-	int compress;        // ÊÇ·ñÑ¹Ëõ
-	int format;          // ÊÇ·ñ¸ñÊ½»¯
-    int utf8Text;         // ÊÇ·ñÎªutf-8 ÎÄ±¾ ÊÇÔòĞè×ÊÔ´»ØÊÕÊ±É¾³ıÖĞ¼äÎÄ¼ş
-    char* convertCacheFilePath; // Îªutf-8ÎÄ±¾Ê±×ª»»Îªgbk¸ñÊ½Ê±Éú³ÉµÄÁÙÊ±ÎÄ¼ş
-    char* outputFilePath; // ĞèÒªÊä³öÎÄ¼şÂ·¾¶£¬ µ±Îªutf-8ÎÄ±¾Ê±ÓÃÓÚ×ª»»»Øutf-8ÎÄ±¾
-
+    FILE* input; // è¾“å…¥æµ
+    FILE* output; // è¾“å‡ºæµ
+    int compress; // æ˜¯å¦å‹ç¼©
+    int format; // æ˜¯å¦æ ¼å¼åŒ–
+    // int utf8Text; // æ˜¯å¦ä¸ºutf-8 æ–‡æœ¬ æ˜¯åˆ™éœ€èµ„æºå›æ”¶æ—¶åˆ é™¤ä¸­é—´æ–‡ä»¶
+    // char* convertCacheFilePath; // ä¸ºutf-8æ–‡æœ¬æ—¶è½¬æ¢ä¸ºgbkæ ¼å¼æ—¶ç”Ÿæˆçš„ä¸´æ—¶æ–‡ä»¶
+    // char* outputFilePath; // éœ€è¦è¾“å‡ºæ–‡ä»¶è·¯å¾„ï¼Œ å½“ä¸ºutf-8æ–‡æœ¬æ—¶ç”¨äºè½¬æ¢å›utf-8æ–‡æœ¬
 };
 
-// º¯ÊıÉùÃ÷
+// å‡½æ•°å£°æ˜
 struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]);
 
 int main(const int argc, char* argv[]) {
-	// setlocale(LC_ALL, ""); // ÉèÖÃ±¾µØ»¯»·¾³ÒÔÖ§³Ö¿í×Ö·û
+    // setlocale(LC_ALL, ""); // è®¾ç½®æœ¬åœ°åŒ–ç¯å¢ƒä»¥æ”¯æŒå®½å­—ç¬¦
     const struct CommandLineArgs args = parseCommandLineArgs(argc, argv);
-    // ÉèÖÃÊäÈëÊä³öÁ÷
-    // Ä¬ÈÏÎª±ê×¼ÊäÈëÊä³ö
+    // è®¾ç½®è¾“å…¥è¾“å‡ºæµ
+    // é»˜è®¤ä¸ºæ ‡å‡†è¾“å…¥è¾“å‡º
     setInputStream(args.input);
-	setOutputStream(args.output);
-	
-    //½âÎöJson
+    setOutputStream(args.output);
+
+    //è§£æJson
     const struct JsonVal* json = parseValue();
-    if (args.compress) {
-        printJsonVal(json);
-    }
-    else if (args.format) {
-        printfJsonVal(json, 0);
-    }
+    if (args.compress) { printJsonVal(json); }
+    else if (args.format) { printfJsonVal(json, 0); }
 
     //destoryJsonVal(json);
-    if (args.input != stdin) {
-        fclose(args.input);
-    }
+    if (args.input != stdin) { fclose(args.input); }
     if (args.output != stdout) {
         fclose(args.output);
-        if(args.utf8Text) {
-            convertGbkToUtf8(args.output);
-        }
+        // if (args.utf8Text) { convertGbkToUtf8(args.output); }
     }
-	return 0;
+    return 0;
 }
 
-// º¯Êı¶¨Òå£º½âÎöÃüÁîĞĞ²ÎÊı
+// å‡½æ•°å®šä¹‰ï¼šè§£æå‘½ä»¤è¡Œå‚æ•°
 struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
     struct CommandLineArgs args;
 
-    // ³õÊ¼»¯½á¹¹Ìå³ÉÔ±
+    // åˆå§‹åŒ–ç»“æ„ä½“æˆå‘˜
     args.input = stdin;
     args.output = stdout;
     args.compress = 0;
     args.format = 1;
-    args.utf8Text = 0;
-    args.convertCacheFilePath = "";
-    // ±ê¼ÇÊÇ·ñÒÑ¾­³öÏÖÁË--format»ò--compress
+    // args.utf8Text = 0;
+    // args.convertCacheFilePath = "__cache.json";
+    // æ ‡è®°æ˜¯å¦å·²ç»å‡ºç°äº†--formatæˆ–--compress
     int formatSeen = 0;
     int compressSeen = 0;
-    // ½âÎöÃüÁîĞĞ²ÎÊı
+    // è§£æå‘½ä»¤è¡Œå‚æ•°
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-of") == 0) {
-            // Ö¸¶¨Êä³öÁ÷
+            // æŒ‡å®šè¾“å‡ºæµ
             if (i + 1 < argc) {
                 printf("Output: %s\n", argv[i + 1]);
                 args.output = fopen(argv[i + 1], "w");
-                args.outputFilePath = argv[i+1];
+                // args.outputFilePath = argv[i + 1];
                 if (args.output == NULL) {
                     perror("Error opening output file");
                     exit(EXIT_FAILURE);
                 }
-                i++; // Ìø¹ıÏÂÒ»¸ö²ÎÊı£¬ÒòÎªËüÊÇÎÄ¼şÂ·¾¶
+                i++; // è·³è¿‡ä¸‹ä¸€ä¸ªå‚æ•°ï¼Œå› ä¸ºå®ƒæ˜¯æ–‡ä»¶è·¯å¾„
             }
             else {
                 fprintf(stderr, "Error: --output option requires a file path.\n");
@@ -85,22 +76,22 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             }
         }
         else if (strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-if") == 0) {
-            // Ö¸¶¨ÊäÈëÁ÷
+            // æŒ‡å®šè¾“å…¥æµ
             if (i + 1 < argc) {
-                FILE* f = fopen(argv[i + 1], "r");
-                args.convertCacheFilePath = "__cache.json";
-                if(isUtf8(f)) {
-                    printf("INFO: Is UTF-8 Text\n");
-                    args.input = convertUtf8ToGbk(f,args.convertCacheFilePath);
-                    args.utf8Text = 1;
-                }else {
-                    args.input = fopen(argv[i + 1], "r");
-                }
+                args.input = fopen(argv[i + 1], "r");
+                // FILE* f = fopen(argv[i + 1], "r");
+
+                // if (isUtf8(f)) {
+                //     printf("INFO: Is UTF-8 Text\n");
+                //     args.input = convertUtf8ToGbk(f);
+                //     args.utf8Text = 1;
+                // }
+                // else { args.input = fopen(argv[i + 1], "r"); }
                 if (args.input == NULL) {
                     perror("Error opening input file");
                     exit(EXIT_FAILURE);
                 }
-                i++; // Ìø¹ıÏÂÒ»¸ö²ÎÊı£¬ÒòÎªËüÊÇÎÄ¼şÂ·¾¶
+                i++; // è·³è¿‡ä¸‹ä¸€ä¸ªå‚æ•°ï¼Œå› ä¸ºå®ƒæ˜¯æ–‡ä»¶è·¯å¾„
             }
             else {
                 fprintf(stderr, "Error: --input option requires a file path.\n");
@@ -108,7 +99,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             }
         }
         else if (strcmp(argv[i], "--compress") == 0 || strcmp(argv[i], "-c") == 0) {
-            // Ñ¹Ëõ¸ñÊ½Êä³öJson
+            // å‹ç¼©æ ¼å¼è¾“å‡ºJson
             if (formatSeen) {
                 fprintf(stderr, "Error: --compress and --format cannot be used together.\n");
                 exit(EXIT_FAILURE);
@@ -118,7 +109,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             compressSeen = 1;
         }
         else if (strcmp(argv[i], "--format") == 0 || strcmp(argv[i], "-f") == 0) {
-            // ¸ñÊ½»¯Êä³öJson
+            // æ ¼å¼åŒ–è¾“å‡ºJson
             if (compressSeen) {
                 fprintf(stderr, "Error: --compress and --format cannot be used together.\n");
                 exit(EXIT_FAILURE);
@@ -127,23 +118,23 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
             formatSeen = 1;
         }
         else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            printf("ÓÃ·¨£ºjson [Ñ¡Ïî]...\n");
-            printf("´ÓÊäÈëÖĞ½âÎöºÍ¸ñÊ½»¯JSONÊı¾İ£¬¿ÉÑ¡ÔñÑ¹Ëõ»ò¸ñÊ½»¯Êä³ö¡£\n\n");
+            printf("ç”¨æ³•ï¼šjson [é€‰é¡¹]...\n");
+            printf("ä»è¾“å…¥ä¸­è§£æå’Œæ ¼å¼åŒ–JSONæ•°æ®ï¼Œå¯é€‰æ‹©å‹ç¼©æˆ–æ ¼å¼åŒ–è¾“å‡ºã€‚\n\n");
 
-            printf("³¤Ñ¡ÏîµÄÇ¿ÖÆĞÔ²ÎÊı¶ÔÓÚ¶ÌÑ¡ÏîÒ²ÊÇÇ¿ÖÆĞÔµÄ¡£\n");
-            printf("    -if, --input Ö¸¶¨ÊäÈëÎÄ¼ş£¨Ä¬ÈÏÎª±ê×¼ÊäÈë£©\n");
-            printf("    -of, --output Ö¸¶¨Êä³öÎÄ¼ş£¨Ä¬ÈÏÎª±ê×¼Êä³ö£©\n");
-            printf("    -f, --format Ê¹ÓÃÊ÷ĞÎËõ½øÊä³ö¸ñÊ½»¯µÄJSON\n");
-            printf("    -c, --compress Êä³öÑ¹ËõµÄJSON\n");
-            printf("    -h, --help ÏÔÊ¾´Ë°ïÖú²¢ÍË³ö\n\n");
+            printf("é•¿é€‰é¡¹çš„å¼ºåˆ¶æ€§å‚æ•°å¯¹äºçŸ­é€‰é¡¹ä¹Ÿæ˜¯å¼ºåˆ¶æ€§çš„ã€‚\n");
+            printf("    -if, --input æŒ‡å®šè¾“å…¥æ–‡ä»¶ï¼ˆé»˜è®¤ä¸ºæ ‡å‡†è¾“å…¥ï¼‰\n");
+            printf("    -of, --output æŒ‡å®šè¾“å‡ºæ–‡ä»¶ï¼ˆé»˜è®¤ä¸ºæ ‡å‡†è¾“å‡ºï¼‰\n");
+            printf("    -f, --format ä½¿ç”¨æ ‘å½¢ç¼©è¿›è¾“å‡ºæ ¼å¼åŒ–çš„JSON\n");
+            printf("    -c, --compress è¾“å‡ºå‹ç¼©çš„JSON\n");
+            printf("    -h, --help æ˜¾ç¤ºæ­¤å¸®åŠ©å¹¶é€€å‡º\n\n");
 
-            printf("Ê¾Àı£º\n");
+            printf("ç¤ºä¾‹ï¼š\n");
             printf("    json -if input.json -of output.json -f\n");
             printf("    json --input=input.json --output=output.json --compress\n\n");
 
-            printf("Èç¹ûÎ´Ö¸¶¨ÊäÈë»òÊä³öÎÄ¼ş£¬Ôò³ÌĞò½«Ä¬ÈÏÊ¹ÓÃ±ê×¼ÊäÈë»ò±ê×¼Êä³ö¡£\n\n");
+            printf("å¦‚æœæœªæŒ‡å®šè¾“å…¥æˆ–è¾“å‡ºæ–‡ä»¶ï¼Œåˆ™ç¨‹åºå°†é»˜è®¤ä½¿ç”¨æ ‡å‡†è¾“å…¥æˆ–æ ‡å‡†è¾“å‡ºã€‚\n\n");
 
-            printf("×¢Òâ£º--compress ºÍ --format Ñ¡Ïî²»ÄÜÍ¬Ê±Ê¹ÓÃ¡£\n");
+            printf("æ³¨æ„ï¼š--compress å’Œ --format é€‰é¡¹ä¸èƒ½åŒæ—¶ä½¿ç”¨ã€‚\n");
             exit(0);
         }
         else {

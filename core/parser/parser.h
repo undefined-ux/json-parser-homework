@@ -3,7 +3,7 @@
 
 
 void setInputStream(FILE* stream);
-struct JsonVal* parseString();
+struct JsonVal* parseString(char token);
 struct JsonVal* parseNumber();
 struct JsonVal* parseBool();
 struct JsonVal* parseNull();

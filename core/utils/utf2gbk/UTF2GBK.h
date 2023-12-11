@@ -4,6 +4,6 @@
 #pragma once
 #include <stdio.h>
 
-FILE* convertUtf8ToGbk(FILE* input, const char* outputFileName);
+FILE* convertUtf8ToGbk(FILE* input);
 void convertGbkToUtf8(FILE* input);
 int isUtf8(FILE* file);

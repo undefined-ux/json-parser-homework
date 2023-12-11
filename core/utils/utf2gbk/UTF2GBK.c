@@ -1,17 +1,21 @@
+#define _POSIX_C_SOURCE 200112L
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iconv.h>
+#include <unistd.h>
 
-FILE* convertUtf8ToGbk(FILE* input, const char* outputFileName) {
+#define BUFFER_SIZE 4096
+
+FILE* convertUtf8ToGbk(FILE* input) {
     iconv_t cd;
+    FILE* output = tmpfile();
     cd = iconv_open("GBK", "UTF-8");
     if (cd == (iconv_t)-1) {
         perror("iconv_open");
         exit(EXIT_FAILURE);
     }
-
-    FILE* output = fopen(outputFileName, "w");
     if (output == NULL) {
         perror("fopen");
         exit(EXIT_FAILURE);
@@ -39,9 +43,9 @@ FILE* convertUtf8ToGbk(FILE* input, const char* outputFileName) {
 
     iconv_close(cd);
     fclose(input);
-    fclose(output);
+    rewind(output);
 
-    return fopen(outputFileName, "r");
+    return output;
 }
 
 void convertGbkToUtf8(FILE* file) {
@@ -92,9 +96,9 @@ void convertGbkToUtf8(FILE* file) {
     iconv_close(cd);
 
     // Reopen the original file for writing
-    file = fopen("converted_file.txt", "w");
+    file = freopen("converted_file.txt", "w", stdout);
     if (file == NULL) {
-        perror("fopen");
+        perror("freopen");
         exit(EXIT_FAILURE);
     }
 
@@ -109,26 +113,21 @@ void convertGbkToUtf8(FILE* file) {
 
 
 int isUtf8(FILE* file) {
-    rewind(file); // 将文件指针定位到文件开头
-
+    // 获取当前文件指针位置
+    long originalPosition = ftell(file);
+    int res = 0;
     // 读取文件的前三个字节
     char bom[3];
     size_t bytesRead = fread(bom, 1, 3, file);
-
-    // 如果文件小于3个字节，返回0
-    if (bytesRead < 3) {
-        rewind(file);
-        return 0;
-    }
+    fseek(file, originalPosition, SEEK_SET);
+    fwrite(bom, 1, bytesRead, file);
 
     // 判断是否为UTF-8 without BOM编码
     if (bom[0] == (char)0xEF && bom[1] == (char)0xBB && bom[2] == (char)0xBF) {
         // 文件包含BOM，不是UTF-8 without BOM编码
-        rewind(file);
-        return 0;
+        res = 0;
     } else {
-        // 文件不包含BOM，可能是UTF-8 without BOM编码
-        rewind(file);
-        return 1;
+        res = 1;
     }
+    return  res;
 }
