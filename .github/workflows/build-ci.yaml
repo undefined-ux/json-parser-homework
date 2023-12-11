@@ -19,7 +19,7 @@ jobs:
             ls
             cd .. && pwd && ls
     - upload artifact:
-      uses: actions/upload-artifact@v3
-      with:
-        name: linux
-        path: build/json
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux
+          path: build/json
