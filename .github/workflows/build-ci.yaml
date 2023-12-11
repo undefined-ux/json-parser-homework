@@ -30,7 +30,7 @@ jobs:
          cmake
          gcc
          ninja
-         binutils
+         pkg-config
           
     - name: build
       shell: msys2 {0}
