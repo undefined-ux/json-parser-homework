@@ -2,13 +2,27 @@
 title: Start up
 sidebar: 'auto'
 ---
+# 使用
 
-# 编译环境
-```
-Visual Studio 2022 + MSVC v143
+## 使用[预构建版本](https://github.com/undefined-ux/json-parser-homework/release)
 
-cl version 19.38.33133
+## 自行编译
+```bash
+pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-iconv mingw-w64-ucrt-x86_64-ninja --needed
+mkdir build -p && cd build
+cmake .. 
+make
 ```
+
+:::tip
+### 编译环境
+```
+Windows11 22h2
+Msys2 GCC 12 CMake 2.27
+```
+:::
+
+
 # 项目结构
 cli交互部分位于${project_folder}/cli
 
