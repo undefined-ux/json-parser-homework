@@ -20,3 +20,30 @@ jobs:
       with:
         name: linux
         path: build/json
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: set up Msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ucrt64
+        install: >-
+         mingw-w64-ucrt64-libiconv
+         mingw-w64-ucrt64-cmake
+         mingw-w64-ucrt64-ninja
+         mingw-w64-ucrt64-gcc
+         mingw-w64-ucrt64-binutils
+          
+    - name: build
+      shell: msys2 {0}
+      run: |
+        mkdir build && cd build && cmake .. && make
+        pwd
+        ls
+        cd .. && pwd && ls
+    - uses: actions/upload-artifact@v3
+      with:
+        name: windows
+        path: build/json.exe
+
