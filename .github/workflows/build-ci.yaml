@@ -26,7 +26,7 @@ jobs:
       with:
         msystem: ucrt64
         install: >-
-         libiconv
+         libiconv-devel
          cmake
          gcc
          ninja
