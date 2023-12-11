@@ -13,9 +13,6 @@ jobs:
     - name: build
       run: |
         mkdir build && cd build && cmake .. && make
-        pwd
-        ls
-        cd .. && pwd && ls
     - uses: actions/upload-artifact@v3
       with:
         name: linux
@@ -38,9 +35,9 @@ jobs:
     - name: build
       shell: msys2 {0}
       run: |
-        mkdir build && cd build && cmake .. && make
-        pwd
-        ls
+        mkdir build && cd build
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build .
+        pwd && ls
         cd .. && pwd && ls
     - uses: actions/upload-artifact@v3
       with:
