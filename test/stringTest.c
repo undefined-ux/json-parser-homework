@@ -1,4 +1,4 @@
-#include "..\cutest\CuTest.h_bak"
+#include "..\cutest\CuTest.h"
 
 int main() {
 
