@@ -2,8 +2,7 @@
 
 ## json解析器
 
-[下载](https://github.com/undefined-ux/json-parser-homework/releases)
-
+[下载](https://github.com/undefined-ux/json-parser-homework/releases) [CI构建](https://github.com/undefined-ux/json-parser-homework/actions)
 
 [文档](https://undefined-ux.github.io/json-parser-homework)
 ### 命令行版本
