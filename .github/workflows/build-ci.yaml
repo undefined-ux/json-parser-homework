@@ -29,11 +29,16 @@ jobs:
       with:
         msystem: ucrt64
         install: >-
-         mingw-w64-ucrt64-libiconv
-         mingw-w64-ucrt64-cmake
-         mingw-w64-ucrt64-ninja
-         mingw-w64-ucrt64-gcc
-         mingw-w64-ucrt64-binutils
+         mingw-w64-libiconv
+         mingw-w64-cmake
+         mingw-w64-ninja
+         mingw-w64-gcc
+         mingw-w64-binutils
+         libiconv
+         cmake
+         gcc
+         ninja
+         binutils
           
     - name: build
       shell: msys2 {0}
