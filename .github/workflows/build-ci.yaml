@@ -37,8 +37,7 @@ jobs:
       run: |
         mkdir build && cd build
         cmake -G Ninja -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build .
-        pwd && ls
-        cd .. && pwd && ls
+
     - uses: actions/upload-artifact@v3
       with:
         name: windows

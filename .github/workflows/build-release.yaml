@@ -1,0 +1,68 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Check Release Commit
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/master" ]]; then
+            releaseField=$(git log -1 --pretty=format:'%B' | grep -oE 'RELEASE: [^\n]+' | cut -d' ' -f2)
+          
+            if [[ -n "$releaseField" ]]; then
+              echo "Release field found. Continuing with subsequent jobs."
+            else
+              echo "No release field found. Exiting with code 78."
+              exit 78  # Exit code 78 skips subsequent jobs
+            fi
+          else
+            echo "Not a push to master branch. Exiting with code 78."
+            exit 78  # Exit code 78 skips subsequent jobs
+          fi
+        shell: bash
+  build-linux:
+    needs: check-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: build
+        run: |
+          mkdir build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=RELEASE .. && cmake --build .
+      - uses: actions/upload-artifact@v3
+        with:
+          name: linux
+          path: build/json
+  build-windows:
+    needs: check-release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: set up Msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ucrt64
+          install: >-
+            libiconv-devel
+            cmake
+            gcc
+            ninja
+            pkg-config
+
+      - name: build
+        shell: msys2 {0}
+        run: |
+          mkdir build && cd build
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=RELEASE .. && cmake --build .
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: build/json.exe
