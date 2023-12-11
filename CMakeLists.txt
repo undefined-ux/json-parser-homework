@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.27)
 
 PROJECT(JsonParser C)
 set(CMAKE_C_STANDARD 17)
+
+find_package(Iconv REQUIRED)
+
 add_library(jsonParserLib
         core/Json.h
         core/parser/parser.h
@@ -19,7 +22,7 @@ add_library(jsonParserLib
         core/utils/utf2gbk/UTF2GBK.c
         core/utils/utf2gbk/UTF2GBK.h
 )
-target_link_libraries(jsonParserLib PRIVATE iconv)
+target_link_libraries(jsonParserLib PRIVATE Iconv::Iconv)
 
 add_executable(json
         cli/main.c
