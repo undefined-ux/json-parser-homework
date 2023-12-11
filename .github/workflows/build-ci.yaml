@@ -1,8 +1,9 @@
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
-  workflow_dispatch:
+  
 
 jobs:
   build-linux:
@@ -18,8 +19,7 @@ jobs:
             pwd
             ls
             cd .. && pwd && ls
-    - upload artifact:
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux
-          path: build/json
+    - uses: actions/upload-artifact@v3
+      with:
+        name: linux
+        path: build/json
