@@ -6,7 +6,6 @@
 
 [文档](https://undefined-ux.github.io/json-parser-homework)
 ### 命令行版本
-# 仅支持GBK格式解析
 #### 使用
 ```
 如果未指定输入或输出文件，则程序将默认使用标准输入或标准输出。
