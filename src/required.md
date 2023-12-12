@@ -16,6 +16,7 @@ cmake -G Ninja -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build .
 ### Linux (Arch)
 ```bash
 pacman -S libiconv cmake ninja gcc --needed
+mkdir build && cd build
 cmake -G Ninja -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build . # Debug Version
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .. && cmake --build . # Release Version
 ```
