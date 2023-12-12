@@ -46,33 +46,15 @@ struct JsonString* parseStringToStr(char token) {
 
 	while ((c = fgetc(f)) && c != EOF && c != token) {
 		if (c == '\\') {
+			JsonStringPushBackChar(c, str);
 			c = fgetc(f);
 			if (c == EOF) {
 				fprintf(stderr, "Unexpected EOF after escape character.\tString value parse begin with %llu\n", pos);
 				exit(1);
 			}
-			switch (c) {
-			case '"':
-			case '\'':
-			case '\\':
-				JsonStringPushBackChar(c, str);
-				break;
-			case 'n':
-				JsonStringPushBackChar('\n', str);
-				break;
-			case 't':
-				JsonStringPushBackChar('\t', str);
-				break;
-			case 'u':
-				JsonStringPushBackChar('\\', str);
-				JsonStringPushBackChar('u', str);
-				break;
-			default:
-				fprintf(stderr, "Invalid escape sequence: \\%c\tString value parse begin with %llu\n", c, pos);
-				exit(1);
-			}
+			JsonStringPushBackChar(c, str);
 		}
-		else { JsonStringPushBackChar(c, str); }
+		else JsonStringPushBackChar(c, str);
 	}
 
 	if (c != token) {
@@ -197,13 +179,14 @@ struct JsonVal* parseBool() {
 			exit(1);
 		}
 		ungetc(c, f);
-		struct JsonVal* res = malloc(sizeof(struct JsonVal));
+
 		if (res == NULL) {
 			// 内存分配失败 OOM (?)
 			// 异常退出， OS进行内存回收
 			exit(1);
 		}
 		res->val = JsonStringFromCharArray("false");
+		return res;
 	}
 	else {
 		fprintf(

@@ -60,7 +60,7 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
         if (strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-of") == 0) {
             // 指定输出流
             if (i + 1 < argc) {
-                puts("Output: ");puts(argv[i + 1]); puts("\n");
+                fputs("Output: ", stdout);fputs(argv[i + 1], stdout); fputs("\n", stdout);
                 args.output = fopen(argv[i + 1], "w");
                 // args.outputFilePath = argv[i + 1];
                 if (args.output == NULL) {
