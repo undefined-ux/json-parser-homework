@@ -5,7 +5,7 @@ sidebar: 'auto'
 # 使用
 
 ## 使用[预构建版本](https://github.com/undefined-ux/json-parser-homework/release)
-
+或者使用[CI构建版本](https://github.com/undefined-ux/json-parser-homework/actions/workflows/build-ci.yaml)
 ## 自行编译
 ### Windows & Msys2
 ```bash
