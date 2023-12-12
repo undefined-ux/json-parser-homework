@@ -59,13 +59,7 @@ void printString(const struct JsonString* str, const int color) {
 	fputc('"', f);
 	char * reader = str->str;
 	while (*reader) {
-		if (*reader == '\n') fputs("\\n", f);
-		else if (*reader == '\t') fputs("\\t", f);
-		else if (*reader == '\r') fputs("\\r", f);
-		else if (*reader == '"') fputs("\\\"", f);
-		else if (*reader == '\'') fputs("\\'", f);
-		else fputc(*reader, f);
-
+		fputc(*reader, f);
 		reader++;
 	}
 	fputc('"', f);if(color) fputs(ANSI_COLOR_RESET, f);
@@ -121,17 +115,16 @@ void printNONE(const int color) {
 }
 
 void printObject(const struct JsonObj* obj, const int color){
-	fputc('{', f);
+	fputs("{", f);
 	for (int i = 0; i < obj->size; i++) {
 		if(color) {
 			fputs(ANSI_COLOR_MAGENTA, f);
-			printString(obj->key + i, color);
+			printString(obj->key + i, 0);
 			fputs(ANSI_COLOR_RESET, f);
-		}else printString(obj->key + i, color);
-		 putc(':', f);
-		printJsonVal(obj->value + i, color);
-		if (i != obj->size - 1) fputc(',', f);
-	} fputc('}', f);
+		}else printString(obj->key + i, 0);
+		fputs(": ", f); printJsonVal(obj->value + i, color);
+		if (i != obj->size - 1) fputs(",", f);
+	}fputs("}", f);
 }
 void printArray(const struct JsonArray* array, const int color){
 	fputc('[', f);
