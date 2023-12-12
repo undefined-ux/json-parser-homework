@@ -19,8 +19,6 @@ add_library(jsonParserLib
         core/types/JsonArray.c
         core/types/JsonObject.c
         core/types/JsonString.c
-        core/utils/utf2gbk/UTF2GBK.c
-        core/utils/utf2gbk/UTF2GBK.h
 )
 target_link_libraries(jsonParserLib PRIVATE Iconv::Iconv)
 

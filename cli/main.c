@@ -30,8 +30,8 @@ int main(const int argc, char* argv[]) {
 
     //解析Json
     const struct JsonVal* json = parseValue();
-    if (args.compress) { printJsonVal(json); }
-    else if (args.format) { printfJsonVal(json, 0); }
+    if (args.compress) { printJsonVal(json, args.output == stdout); }
+    else if (args.format) { printfJsonVal(json, 0, args.output == stdout); }
 
     //destoryJsonVal(json);
     if (args.input != stdin) { fclose(args.input); }
