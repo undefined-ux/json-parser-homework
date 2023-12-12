@@ -6,7 +6,6 @@
 
 [文档](https://undefined-ux.github.io/json-parser-homework)
 ### 命令行版本
-# 仅支持GBK格式解析
 #### 使用
 ```
 如果未指定输入或输出文件，则程序将默认使用标准输入或标准输出。
@@ -16,6 +15,7 @@
 -f, --format 使用树形缩进输出格式化的JSON
 -h, --help 显示此帮助并退出
 -c, --compress 输出压缩的JSON
+-u, --utf 启用utf-8编码支持
 ```
 
 ### GUI
