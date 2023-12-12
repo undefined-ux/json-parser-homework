@@ -28,3 +28,13 @@ $ json # 从stdin读入并输出至stdout, 默认指定树状缩进输出
 $ json -c 
 $ json --compress
 ```
+
+## 支持UTF-8编码输出
+:::tip
+仅当你需要输出至控制台并读入了utf-8编码的文件时使用
+:::
+```bash
+# 从stdin读入并输出至stdout, 以压缩后形式输出
+$ json -u
+$ json --utf
+```

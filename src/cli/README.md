@@ -12,6 +12,7 @@ sidebar: 'auto'
         -if, --input 指定输入文件（默认为标准输入）
         -of, --output 指定输出文件（默认为标准输出）
         -f, --format 使用树形缩进输出格式化的JSON
+        -u, --utf 启用utf-8编码支持
         -h, --help 显示此帮助并退出
         -c, --compress 输出压缩的JSON
 ```
@@ -40,8 +41,8 @@ sidebar: 'auto'
         9
     ],
     "StringKey": "Test",
-    "BoolKey": True,
-    "NoneKey": Null,
+    "BoolKey": true,
+    "NoneKey": null,
     "ObjectKey": {
         "key": "Test"
     }
