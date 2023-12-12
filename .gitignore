@@ -9,3 +9,4 @@ cmake-build-debug-mingw/
 lcui-quick-start.zip
 package-lock.json
 -g/
+build/
