@@ -9,7 +9,7 @@ void setInputStream(FILE* stream) { f = stream; }
 void ignoreWhiteCharactor() {
 	char c;
 	while ((c = fgetc(f)) != EOF && (c == ' ' || c == '\r' || c == '\n' || c == '\t'));
-	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == EOF)) { ungetc(c, f); }
+	if (!(c == ' ' || c == '\r' || c == '\n' || c == '\t' || c == EOF)) ungetc(c, f);
 }
 
 
@@ -132,15 +132,21 @@ struct JsonVal* parseNumber() {
 		exit(1);
 	}
 	ungetc(c, f);
-	res->type = NUMBER;
-	res->val = str;
+	res->type = NUMBER; res->val = str;
 	return res;
 }
 
 struct JsonVal* parseBool() {
 	char c;
 	// true or false
+	struct JsonVal* res = malloc(sizeof(struct JsonVal));
+	if (res == NULL) {
+		// 内存分配失败 OOM (?)
+		// 异常退出， OS进行内存回收
+		exit(1);
+	}
 
+	res->type = BOOL;
 	if ((c = fgetc(f)) == 't' || c == 'T') {
 		// true
 		const char trueStr[] = "true";
@@ -165,16 +171,7 @@ struct JsonVal* parseBool() {
 			exit(1);
 		}
 		ungetc(c, f);
-		struct JsonVal* res = malloc(sizeof(struct JsonVal));
-		if (res == NULL) {
-			// 内存分配失败 OOM (?)
-			// 异常退出， OS进行内存回收
-			exit(1);
-		}
-
-		res->type = BOOL;
 		res->val = JsonStringFromCharArray("true");
-		return res;
 	}
 	else if (c == 'f' || c == 'F') {
 		// false
@@ -206,9 +203,7 @@ struct JsonVal* parseBool() {
 			// 异常退出， OS进行内存回收
 			exit(1);
 		}
-		res->type = BOOL;
 		res->val = JsonStringFromCharArray("false");
-		return res;
 	}
 	else {
 		fprintf(
@@ -218,6 +213,7 @@ struct JsonVal* parseBool() {
 		); // 写入报错到标准错误流
 		exit(1);
 	}
+	return res;
 }
 
 
@@ -321,7 +317,6 @@ struct JsonVal* parseNull() {
 		// 异常退出， OS进行内存回收
 		exit(1);
 	}
-	res->type = BOOL;
-	res->val = JsonStringFromCharArray("false");
+	res->type = NONE; res->val = NULL;
 	return res;
 }

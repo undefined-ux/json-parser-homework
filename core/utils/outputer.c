@@ -55,72 +55,70 @@ void printJsonVal(const struct JsonVal* val) {
 }
 
 void printString(const struct JsonString* str) {
-	if (!str->length) {
-		fprintf(f, "\"\"");
+	fputc('"', f);
+	char * reader = str->str;
+	while (*reader) {
+		if (*reader == '\n') fputs("\\n", f);
+		else if (*reader == '\t') fputs("\\t", f);
+		else if (*reader == '\r') fputs("\\r", f);
+		else if (*reader == '"') fputs("\\\"", f);
+		else if (*reader == '\'') fputs("\\'", f);
+		else fputc(*reader, f);
+
+		reader++;
 	}
-	else {
-		fprintf(f, "\"");
-		for(int i = 0; i < str->length; i++) {
-			if(str->str[i] == '\n') fprintf(f, "\\n");
-			else if (str->str[i] == '\t') fprintf(f, "\\t");
-			else if (str->str[i] == '\r')fprintf(f, "\\r");
-			else if (str->str[i] == '"')fprintf(f, "\\\"");
-			else if (str->str[i] == '\'')fprintf(f, "\\'");
-			else fprintf(f, "%c", str->str[i]);
-		}
-		fprintf(f, "\"");
-	}
+
+	fputc('"', f);
 }
 
 void printfObject(const struct JsonObj* obj, const int hierarchy) {
-	fprintf(f, "{\n");
+	fputs("{\n", f);
 	for (int i = 0; i < obj->size; i++) {
-		indent(hierarchy + 1);
-		printString(obj->key + i); fprintf(f, ": ");
-		printfJsonVal((obj->value + i), hierarchy + 1);
-		if (i != obj->size - 1) fprintf(f, ",");
-		fprintf(f, "\n");
+		indent(hierarchy + 1); printString(obj->key + i);
+		fputs(": ", f); printfJsonVal(obj->value + i, hierarchy + 1);
+		if (i != obj->size - 1) fputs(",", f);
+		fputs("\n", f);
 	}
-	indent(hierarchy); fprintf(f, "}");
+	indent(hierarchy); fputs("}", f);
 }
 
 
 
 void printfArray(const struct JsonArray* array, int hierarchy) {
-	fprintf(f, "[\n");
+	fputs("[\n", f);
 	for (int i = 0; i < array->length; i++) {
-		indent(hierarchy + 1);
-		printfJsonVal(&((array->arr)[i]), hierarchy + 1);
-		if (i != array->length - 1) fprintf(f, ","); fprintf(f, "\n");
+		indent(hierarchy + 1); printfJsonVal(&array->arr[i], hierarchy + 1);
+		if (i != array->length - 1) fputs(",", f);
+		fputs("\n", f);
 	}
-	indent(hierarchy); fprintf(f, "]");
+	indent(hierarchy); fputs("]", f);
 }
 
 
 void printNumber(const struct JsonString* num) {
-	fprintf(f, "%s", num->str);
+	fputs(num->str, f);
 }
 
 void printBool(const struct JsonString* bl) {
-	fprintf(f, "%s", bl->str);
+	fputs(bl->str, f);
 }
 
 void printNONE() {
-	fprintf(f, "Null");
+	fputs("null", f);
 }
 
 void printObject(const struct JsonObj* obj){
-	fprintf(f, "{");
+	fputc('{', f);
 	for (int i = 0; i < obj->size; i++) {
-		printString(obj->key + i); fprintf(f, ":");
+		printString(obj->key + i); putc(':', f);
 		printJsonVal(obj->value + i);
-		if (i != obj->size - 1) fprintf(f, ",");
-	} fprintf(f, "}");
+		if (i != obj->size - 1) fputc(',', f);
+	} fputc('}', f);
 }
 void printArray(const struct JsonArray* array){
-	fprintf(f, "[");
+	fputc('[', f);
 	for (int i = 0; i < array->length; i++) {
 		printJsonVal(array->arr + i);
-		if (i != array->length - 1) fprintf(f, ",");
-	}fprintf(f, "]");
+		if (i != array->length - 1) fputc(',', f);
+	}fputc(']', f);
 }
