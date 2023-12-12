@@ -16,6 +16,7 @@
 -f, --format 使用树形缩进输出格式化的JSON
 -h, --help 显示此帮助并退出
 -c, --compress 输出压缩的JSON
+-u, --utf 启用utf-8编码支持
 ```
 
 ### GUI
