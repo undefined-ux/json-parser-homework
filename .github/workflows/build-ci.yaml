@@ -26,11 +26,13 @@ jobs:
       with:
         msystem: ucrt64
         install: >-
+         mingw-w64-x86_64-toolchain
          libiconv-devel
          cmake
          gcc
          ninja
          pkg-config
+         
           
     - name: build
       shell: msys2 {0}

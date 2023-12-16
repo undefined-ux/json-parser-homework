@@ -31,7 +31,7 @@ target_include_directories(json PRIVATE
 target_link_libraries(json PRIVATE
         jsonParserLib
 )
-
+target_link_libraries(json PRIVATE -static)
 add_library(cutest
         cutest/CuTest.h
         cutest/CuTest.c
