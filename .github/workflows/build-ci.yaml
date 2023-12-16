@@ -28,9 +28,6 @@ jobs:
         install: >-
          mingw-w64-x86_64-toolchain
          libiconv-devel
-         cmake
-         gcc
-         ninja
          pkg-config
          
           
