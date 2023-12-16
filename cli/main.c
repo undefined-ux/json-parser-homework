@@ -118,10 +118,10 @@ struct CommandLineArgs parseCommandLineArgs(int argc, char* argv[]) {
         }
         else if (strcmp(argv[i], "--utf") == 0 || strcmp(argv[i], "-u") == 0) {
             // 本地字符集设置为 UTF-8
-            setlocale(LC_ALL, "");
+            setlocale(LC_ALL, "zh_CN.UTF-8");
         }
         else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            setlocale(LC_ALL, "");
+            setlocale(LC_ALL, "zh_CN.UTF-8");
             puts("用法：json [选项]...\n");
             puts("从输入中解析和格式化JSON数据，可选择压缩或格式化输出。\n\n");
 
