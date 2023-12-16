@@ -5,6 +5,9 @@ set(CMAKE_C_STANDARD 17)
 
 find_package(Iconv REQUIRED)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -municode -static")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lintl -liconv")
+
 add_library(jsonParserLib
         core/Json.h
         core/parser/parser.h
@@ -31,8 +34,7 @@ target_include_directories(json PRIVATE
 target_link_libraries(json PRIVATE
         jsonParserLib
 )
-target_link_libraries(json PRIVATE -static )
-target_link_libraries(json PRIVATE -municode)
+
 add_library(cutest
         cutest/CuTest.h
         cutest/CuTest.c
