@@ -6,7 +6,6 @@ set(CMAKE_C_STANDARD 17)
 find_package(Iconv REQUIRED)
 add_definitions(-DLOCALEDIR="\"${CMAKE_INSTALL_PREFIX}/share/locale\"")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
 
 add_library(jsonParserLib
         core/Json.h
