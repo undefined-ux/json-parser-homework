@@ -7,9 +7,9 @@ sidebar: 'auto'
 ## 使用[预构建版本](https://github.com/undefined-ux/json-parser-homework/release)
 或者使用[CI构建版本](https://github.com/undefined-ux/json-parser-homework/actions/workflows/build-ci.yaml)
 ## 自行编译
-### Windows & Msys2
+### Windows & msys2 ucrt64
 ```bash
-pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-iconv mingw-w64-x86_64-ninja --needed
+pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-iconv mingw-w64-ucrt-x86_64-libiconv mingw-w64-ucrt-x86_64-ninja --needed
 mkdir build && cd build
 cmake -G Ninja -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build .
 ```
