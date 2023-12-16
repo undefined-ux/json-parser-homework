@@ -30,8 +30,6 @@ jobs:
          mingw-w64-x86_64-cmake
          libiconv-devel
          pkg-config
-         
-          
     - name: build
       shell: msys2 {0}
       run: |
