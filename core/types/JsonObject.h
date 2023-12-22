@@ -3,7 +3,7 @@
 #include "JsonString.h"
 #include "JsonValue.h"
 
-struct JsonObj {
+struct JsonObj {// unsigned long long == size_t
 	size_t size;
 	struct JsonString* key;
 	struct JsonVal* value;
