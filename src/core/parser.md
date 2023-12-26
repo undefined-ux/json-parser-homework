@@ -19,7 +19,7 @@ sidebar: 'auto'
 :::tip 
 String， Number，Bool， Null字面量值统一保存于 val->val; 
 
-详情见[对String，Number，Bool，Null内部表示实现的一些说明](/core/types/JsonVal)
+详情见[对String，Number，Bool，Null内部表示实现的一些说明](/core/types#JsonVal)
 :::
 ```c
 // val->val
