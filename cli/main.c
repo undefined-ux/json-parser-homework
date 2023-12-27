@@ -35,9 +35,11 @@ int main(const int argc, char* argv[]) {
 
     //destoryJsonVal(json);
     if (args.input != stdin) { fclose(args.input); }
+    else fprintf(args.input, "\n");
     if (args.output != stdout) {
         fclose(args.output);
     }
+
     return 0;
 }
 
